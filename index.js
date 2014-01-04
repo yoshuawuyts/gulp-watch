@@ -1,6 +1,6 @@
 'use strict';
 
-var PassThrough = require('stream').PassThrough,
+var map = require('map-stream'),
     batch = require('gulp-batch'),
     File = require('gulp-util').File,
     Gaze = require('gaze'),
@@ -36,21 +36,23 @@ module.exports = function (opts, cb) {
 
     var pathMap = {};
 
-    var through = new PassThrough({objectMode: true})
-        .on('pipe', function (source) {
-            preventDefaultEnd(source);
-        })
-        .on('data', function (file) {
+    var through = new map(function (file, cb) {
+        if (file.stat.isFile()) {
             pathMap[file.path] = {
                 cwd: file.cwd,
                 base: file.base
             };
             gaze.add(file.path);
-        })
-        .on('unwatch', function () {
-            gaze.on('end', this.emit.bind(this, 'end'));
-            gaze.close();
-        });
+        }
+        cb(); // Drop all the files! :D
+    })
+    .on('pipe', function (source) {
+        preventDefaultEnd(source);
+    })
+    .on('unwatch', function () {
+        gaze.on('end', this.emit.bind(this, 'end'));
+        gaze.close();
+    });
 
     function createFile(cb, event, filepath) {
         var file = new File({
