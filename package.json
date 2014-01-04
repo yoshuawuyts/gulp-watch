@@ -23,11 +23,11 @@
   "devDependencies": {
     "gulp": "~3.2.2",
     "gulp-mocha": "~0.2.0",
-    "espower-loader": "~0.3.1",
-    "power-assert": "~0.3.1",
     "async": "~0.2.9"
   },
   "dependencies": {
-    "gulp-batch": "~0.2.4"
+    "gulp-batch": "~0.2.4",
+    "event-stream": "~3.0.20",
+    "gaze": "~0.4.3"
   }
 }
