@@ -2,7 +2,7 @@
 
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
-var batch = require('gulp-batch');
+var watch = require('./index');
 
 gulp.task('mocha', function () {
     return gulp.src(['test/*.js'])
@@ -13,7 +13,7 @@ gulp.task('mocha', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(['test/**', 'index.js'], batch(function (events, cb) {
+    gulp.src(['test/**', 'index.js']).pipe(watch(function (events, cb) {
         gulp.run('mocha', cb);
     }));
 });

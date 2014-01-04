@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "gulp-batch": "~0.2.4",
-    "event-stream": "~3.0.20",
     "gaze": "~0.4.3"
   }
 }

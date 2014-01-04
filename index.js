@@ -1,6 +1,6 @@
 'use strict';
 
-var es = require('event-stream');
+var PassThrough = require('stream').PassThrough;
 var batch = require('gulp-batch');
 var Gaze = require('gaze');
 
@@ -31,10 +31,9 @@ module.exports = function (opts, cb) {
 
     var gaze = new Gaze();
 
-    var through = es.through(function write(file) {
+    var through = new PassThrough({objectMode: true});
+    through.on('data', function (file) {
         gaze.add(file.path);
-    }, function end() {
-        // Neverending story
     });
 
     gaze.on('all', cb ? batched.bind(null, cb) : streamed.bind(through));
