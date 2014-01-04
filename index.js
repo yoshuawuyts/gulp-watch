@@ -1,9 +1,9 @@
 'use strict';
 
-var PassThrough = require('stream').PassThrough;
-var batch = require('gulp-batch');
-var File = require('gulp-util').File;
-var Gaze = require('gaze');
+var PassThrough = require('stream').PassThrough,
+    batch = require('gulp-batch'),
+    File = require('gulp-util').File,
+    Gaze = require('gaze');
 
 function createFile(event, filepath) {
     var file = new File({ path: filepath });

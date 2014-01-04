@@ -21,22 +21,25 @@ gulp.task('mocha', function () {
         .on('error', gutil.log);
 });
 
-gulp.src(['lib/**', 'test/**']).pipe(watch(function(events, cb) {
-    gulp.run('mocha', cb);
-});
+gulp.src(['lib/**', 'test/**'], { read: false })
+    .pipe(watch(function(events, cb) {
+        gulp.run('mocha', cb);
+    });
 ```
 
 
-### Continious stream of events (will not work, content lost)
+### Continious stream of events
 
 ```js
 // npm i gulp gulp-watch gulp-sass
 
-var gulp = require('gulp');
-var watch = require('gulp-watch');
-var sass = require('gulp-sass');
+var gulp = require('gulp'),
+    watch = require('gulp-watch'),
+    sass = require('gulp-sass');
 
-gulp.src('scss/**').pipe(watch()).pipe(sass());
+gulp.src('scss/**', { read: false })
+    .pipe(watch())
+    .pipe(sass());
 ```
 
 ## API

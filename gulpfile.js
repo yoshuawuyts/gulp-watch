@@ -13,7 +13,7 @@ gulp.task('mocha', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.src(['test/**', 'index.js']).pipe(watch(function (events, cb) {
+    gulp.src(['test/**', 'index.js'], { read: false }).pipe(watch(function (events, cb) {
         gulp.run('mocha', cb);
     }));
 });
