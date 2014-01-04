@@ -27,10 +27,10 @@ gulp.src(['lib/**', 'test/**']).pipe(watch(function(events, cb) {
 ```
 
 
-### Continious stream of events
+### Continious stream of events (will not work, content lost)
 
 ```js
-// npm i gulp gulp-watch gulp-saas
+// npm i gulp gulp-watch gulp-sass
 
 var gulp = require('gulp');
 var watch = require('gulp-watch');

@@ -2,17 +2,24 @@
 
 var PassThrough = require('stream').PassThrough;
 var batch = require('gulp-batch');
+var File = require('gulp-util').File;
 var Gaze = require('gaze');
+
+function createFile(event, filepath) {
+    var file = new File({ path: filepath });
+    file.event = event;
+    return file;
+}
 
 function batched(cb, event, filepath) {
     // Do we need to stream this events next?
     // through.emit('data', event);
-    cb({ type: event, path: filepath });
+    cb(createFile(event, filepath));
 }
 
 function streamed(event, filepath) {
     /*jshint validthis:true */
-    this.emit('data', { type: event, path: filepath });
+    this.emit('data', createFile(event, filepath));
 }
 
 module.exports = function (opts, cb) {
