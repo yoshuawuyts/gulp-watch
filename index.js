@@ -42,12 +42,13 @@ module.exports = function (opts, cb) {
         file.event = event;
         var tasks = { stat: fs.stat.bind(fs, filepath) };
         if (opts.read) {
-            tasks.content = opts.buffer ?
+            tasks.contents = opts.buffer ?
                 fs.readFile.bind(fs, filepath) :
                 function (cb) { cb(null, fs.createReadStream(filepath)); };
         }
         async.parallel(tasks, function (err, results) {
-            file.content = results.content;
+            var nullContent = err || !results.contents;
+            file.contents = nullContent ? null : results.contents;
             file.stat = results.stat;
             cb(file);
         });

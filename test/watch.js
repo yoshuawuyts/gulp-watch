@@ -77,7 +77,7 @@ describe('gulp-watch', function () {
         setTimeout(touchFiles, touchTimeout);
     });
 
-    it('should preserve content and stat', function (done) {
+    it('should preserve contents and stat', function (done) {
         var expected;
         this.pipe = gulp.src(path.join(sourceDir, files[0]))
             .on('data', function (file) {
@@ -85,7 +85,8 @@ describe('gulp-watch', function () {
             })
             .pipe(watch(function (events) {
                 var actual = events.pop();
-                assert.ok(actual.content);
+                assert.ok(actual.contents);
+                assert.deepEqual(actual.contents, expected.contents);
                 assert.ok(actual.stat);
                 done();
             }));
@@ -101,7 +102,7 @@ describe('gulp-watch', function () {
             })
             .pipe(watch({ read: false }, function (events) {
                 var actual = events.pop();
-                assert.ok(!actual.content);
+                assert.ok(!actual.contents);
                 assert.ok(actual.stat);
                 done();
             }));
@@ -117,8 +118,8 @@ describe('gulp-watch', function () {
             })
             .pipe(watch({ buffer: false }, function (events) {
                 var actual = events.pop();
-                assert.ok(actual.content);
-                assert.ok(actual.content instanceof Stream);
+                assert.ok(actual.contents);
+                assert.ok(actual.contents instanceof Stream);
                 done();
             }));
 
