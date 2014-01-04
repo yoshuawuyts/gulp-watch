@@ -28,7 +28,16 @@ module.exports = function (opts, cb) {
 
     var gaze = new Gaze();
 
+    function preventDefaultEnd(stream) {
+        stream.listeners('end').forEach(function (item) {
+            if (item.name === 'onend') { this.removeListener('end', item); }
+        }, stream);
+    }
+
     var through = new PassThrough({objectMode: true})
+        .on('pipe', function (source) {
+            preventDefaultEnd(source);
+        })
         .on('data', function (file) {
             gaze.add(file.path);
         })
