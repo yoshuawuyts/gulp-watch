@@ -28,5 +28,6 @@
   "dependencies": {
     "gulp-batch": "~0.2.4",
     "gaze": "~0.4.3"
-  }
+  },
+  "engine": "node >= 0.10"
 }
