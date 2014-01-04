@@ -59,6 +59,17 @@ This object passed to [`gaze` options](https://github.com/shama/gaze#properties)
 
 For __batched__ mode we are using [`gulp-batch`](https://github.com/floatdrop/gulp-batch#api), so options from there are available.
 
+__Events__:
+
+To stop watching for files you can use `unwatch` event:
+
+```js
+var pipe = gulp.src(sourceFiles).pipe(watch(function (events) {
+    // Do some cool stuff
+    pipe.emit('unwatch');
+}));
+```
+
 __Returns__:
 
  * __Batched mode__  - wrapped callback, that will gather events and call callback.

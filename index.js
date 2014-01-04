@@ -38,10 +38,13 @@ module.exports = function (opts, cb) {
 
     var gaze = new Gaze();
 
-    var through = new PassThrough({objectMode: true});
-    through.on('data', function (file) {
-        gaze.add(file.path);
-    });
+    var through = new PassThrough({objectMode: true})
+        .on('data', function (file) {
+            gaze.add(file.path);
+        })
+        .on('unwatch', function () {
+            gaze.close();
+        });
 
     gaze.on('all', cb ? batched.bind(null, cb) : streamed.bind(through));
 
