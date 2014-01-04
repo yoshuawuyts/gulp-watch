@@ -57,7 +57,7 @@ __Options__:
 
 This object passed to [`gaze` options](https://github.com/shama/gaze#properties) directly, so see documentation there.
 
-For __batched__ mode we are using [`gulp-batch`](https://github.com/floatdrop/gulp-batch#api), so options from there are available.
+For __batched__ mode we are using [`gulp-batch`](https://github.com/floatdrop/gulp-batch#api), so options from there are available (only `timeout` was raised to 500).
 
 __Events__:
 

@@ -10,8 +10,10 @@ var PassThrough = require('stream').PassThrough,
 module.exports = function (opts, cb) {
     if (typeof opts !== 'object') {
         cb = opts;
-        opts = {};
+        opts = { };
     }
+
+    opts.timeout = opts.timeout || 500;
 
     if (typeof opts.read !== 'boolean') { opts.read = true; }
     if (typeof opts.buffer !== 'boolean') { opts.buffer = true; }
