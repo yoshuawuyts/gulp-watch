@@ -67,8 +67,12 @@ To stop watching for files you can use `unwatch` event:
 var pipe = gulp.src(sourceFiles).pipe(watch(function (events) {
     // Do some cool stuff
     pipe.emit('unwatch');
-}));
+})).on('end', function () {
+    console.log('Good work!');
+});
 ```
+
+After `watch` recieves `unwatch` it will call `gaze.close` and emit `end` event when gaze is stopped watching files.
 
 __Returns__:
 

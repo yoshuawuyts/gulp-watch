@@ -9,7 +9,7 @@
     "gulpplugin"
   ],
   "scripts": {
-    "test": "gulp mocha"
+    "test": "mocha test/*.js --reporter list"
   },
   "repository": {
     "type": "git",
@@ -22,12 +22,12 @@
   },
   "devDependencies": {
     "gulp": "~3.2.2",
-    "gulp-mocha": "~0.2.0",
-    "async": "~0.2.9"
+    "gulp-mocha": "~0.2.0"
   },
   "dependencies": {
     "gulp-batch": "~0.2.4",
     "gaze": "~0.4.3",
+    "async": "~0.2.9",
     "gulp-util": "~2.2.5"
   },
   "engine": "node >= 0.10"

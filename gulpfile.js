@@ -6,16 +6,17 @@ var watch = require('./index');
 
 gulp.task('mocha', function () {
     return gulp.src(['test/*.js'])
-        .pipe(mocha({ reporter: 'list' }))
+        .pipe(mocha({ timeout: 10000, slow: 8000, reporter: 'list' }))
         .on('error', function (err) {
             console.log(err.stack);
         });
 });
 
 gulp.task('watch', function () {
-    gulp.src(['test/**', 'index.js'], { read: false }).pipe(watch(function (events, cb) {
-        gulp.run('mocha', cb);
-    }));
+    gulp.src(['test/*.js', 'index.js'], { read: false })
+        .pipe(watch(function (events, cb) {
+            gulp.run('mocha', cb);
+        }));
 });
 
 gulp.task('default', function () {
