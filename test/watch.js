@@ -58,11 +58,11 @@ describe('gulp-watch', function () {
 
     it('should capture events with stream version', function (done) {
         function check(file) {
-            assert.ok(files.concat(dirs).indexOf(file.relative) !== -1);
+            assert.ok(files.indexOf(file.relative) !== -1);
         }
 
         var iterator = async.iterator([
-            check, check, check, check,
+            check, check,
             function (file) {
                 check(file);
                 done();
