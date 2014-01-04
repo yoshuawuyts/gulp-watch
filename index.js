@@ -4,14 +4,15 @@ var es = require('event-stream');
 var batch = require('gulp-batch');
 var Gaze = require('gaze');
 
-function batched(cb, event) {
+function batched(cb, event, filepath) {
     // Do we need to stream this events next?
     // through.emit('data', event);
-    cb(event);
+    cb({ type: event, path: filepath });
 }
 
-function streamed(event) {
-    this.emit('data', event);
+function streamed(event, filepath) {
+    /*jshint validthis:true */
+    this.emit('data', { type: event, path: filepath });
 }
 
 module.exports = function (opts, cb) {
