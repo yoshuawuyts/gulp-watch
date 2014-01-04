@@ -54,11 +54,7 @@ __Options__:
 
 This object passed to [`gaze` options](https://github.com/shama/gaze#properties) directly, so see documentation there.
 
-For __batched__ mode only:
-
- * `debounce` - Minimal interval between calling callback after `done` (only works with async callback) (default: `0`)
- * `limit` - Maximum events number, that gets into one batch (default: `undefined` - unlimited)
- * `timeout` - Interval in milliseconds, that counts as "no more events will arrive" (default: `200`)
+For __batched__ mode we are using [`gulp-batch`](https://github.com/floatdrop/gulp-batch#api), so options from there are available.
 
 __Returns__:
 
