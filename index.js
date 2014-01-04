@@ -34,11 +34,17 @@ module.exports = function (opts, cb) {
         }, stream);
     }
 
+    var pathMap = {};
+
     var through = new PassThrough({objectMode: true})
         .on('pipe', function (source) {
             preventDefaultEnd(source);
         })
         .on('data', function (file) {
+            pathMap[file.path] = {
+                cwd: file.cwd,
+                base: file.base
+            };
             gaze.add(file.path);
         })
         .on('unwatch', function () {
@@ -47,7 +53,11 @@ module.exports = function (opts, cb) {
         });
 
     function createFile(cb, event, filepath) {
-        var file = new File({ path: filepath });
+        var file = new File({
+            path: filepath,
+            base: pathMap[filepath] ? pathMap[filepath].base : undefined,
+            cwd: pathMap[filepath] ? pathMap[filepath].cwd : undefined
+        });
         file.event = event;
         var tasks = { stat: fs.stat.bind(fs, filepath) };
         if (opts.read) {
