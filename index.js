@@ -54,9 +54,7 @@ module.exports = function (opts, cb) {
             .on('data', function (file) {
                 done(file);
             })
-            .on('error', function (error) {
-                duplex.emit.bind(duplex, 'error');
-            });
+            .on('error', duplex.emit.bind(duplex, 'error'));
     }
 
     var domain = require('domain').create();
