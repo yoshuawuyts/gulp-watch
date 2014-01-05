@@ -37,13 +37,11 @@ module.exports = function (opts, cb) {
     var pathMap = {};
 
     var through = new map(function (file, cb) {
-        if (file.stat.isFile()) {
-            pathMap[file.path] = {
-                cwd: file.cwd,
-                base: file.base
-            };
-            gaze.add(file.path);
-        }
+        pathMap[file.path] = {
+            cwd: file.cwd,
+            base: file.base
+        };
+        gaze.add(file.path);
         cb(); // Drop all the files! :D
     })
     .on('pipe', function (source) {
