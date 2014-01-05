@@ -82,6 +82,7 @@ __Events__:
 
  * `end` - all files are stop being watched.
  * `ready` - all files, that are passed from `gulp.src`, are now being watched.
+ * `error` - when something happened inside callback, you will get notified.
 
 __Returns__:
 

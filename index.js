@@ -41,16 +41,7 @@ module.exports = function (opts, cb) {
         gaze.close();
     };
 
-    readable.on('data', function (data) {
-        console.log('readable data: ' + data.path);
-    });
-
-    readable.on('end', function () {
-        console.log('readable end');
-    });
-
     writable.on('finish', function () {
-        // Source stream is ended and all files is watched
         duplex.emit('ready');
     });
 
@@ -76,8 +67,13 @@ module.exports = function (opts, cb) {
         });
     }
 
+    var domain = require('domain').create();
+    domain.on('error', function (error) {
+        duplex.emit('error', error);
+    });
+
     gaze.on('all', cb ?
-        createFile.bind(null, batch(opts, cb.bind(duplex))) :
+        createFile.bind(null, domain.bind(batch(opts, cb.bind(duplex)))) :
         createFile.bind(null, readable.emit.bind(readable, 'data'))
     );
 

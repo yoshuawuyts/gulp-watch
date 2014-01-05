@@ -42,6 +42,7 @@ describe('gulp-watch', function () {
                 this.close();
             }))
             .on('ready', touchFiles.bind(null, null))
+            .on('error', done)
             .on('end', done);
     });
 
@@ -63,6 +64,7 @@ describe('gulp-watch', function () {
                 iterator = iterator(file);
             })
             .on('ready', touchFiles.bind(null, null))
+            .on('error', done)
             .on('end', done);
 
     });
@@ -82,6 +84,7 @@ describe('gulp-watch', function () {
                 this.close();
             }))
             .on('ready', touchFile.bind(null, null))
+            .on('error', done)
             .on('end', done);
     });
 
@@ -98,6 +101,7 @@ describe('gulp-watch', function () {
                 this.close();
             }))
             .on('ready', touchFile.bind(null, null))
+            .on('error', done)
             .on('end', done);
     });
 
@@ -114,6 +118,7 @@ describe('gulp-watch', function () {
                 this.close();
             }))
             .on('ready', touchFile.bind(null, null))
+            .on('error', done)
             .on('end', done);
     });
 

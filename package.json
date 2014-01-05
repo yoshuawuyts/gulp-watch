@@ -9,7 +9,7 @@
     "gulpplugin"
   ],
   "scripts": {
-    "test": "mocha test/*.js --reporter list"
+    "test": "mocha test/*.js --reporter list --timeout 5000"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
     "gulp-mocha": "~0.2.0"
   },
   "dependencies": {
-    "gulp-batch": "~0.2.4",
+    "gulp-batch": "~0.3.0",
     "gaze": "~0.4.3",
     "async": "~0.2.9",
     "gulp-util": "~2.2.5",
