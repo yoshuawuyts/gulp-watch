@@ -1,7 +1,7 @@
 # [gulp](https://github.com/gulpjs/gulp)-watch [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 > Watch, that you expect
 
-This is mostly __proof-of-concept__ of streaming version for `gulp.watch`. API will change, maybe this plugin will be obsolete soon (likely move to `fs.watch` of `vinyl.fs`).
+This is mostly __proof-of-concept__ of streaming version for `gulp.watch`, but it works.
 
 ## Usage
 
