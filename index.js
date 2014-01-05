@@ -12,9 +12,6 @@ module.exports = function (opts, cb) {
         opts = { };
     }
 
-    if (typeof opts.read !== 'boolean') { opts.read = true; }
-    if (typeof opts.buffer !== 'boolean') { opts.buffer = true; }
-
     if (cb && typeof cb !== 'function') {
         throw new Error('Provided callback is not a function: ' + cb);
     }
