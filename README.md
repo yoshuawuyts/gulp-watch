@@ -72,6 +72,8 @@ This object passed to [`gaze` options](https://github.com/shama/gaze#properties)
 
 For __batched__ mode we are using [`gulp-batch`](https://github.com/floatdrop/gulp-batch#api), so options from there are available.
 
+And of course options for [`gulp.src`](https://github.com/gulpjs/gulp#gulpsrcglobs-options) used too. If you do not want content from watch, then add `read: false` to options object.
+
 __Methods__:
 
 Returned Stream from constructor have some useful methods:
