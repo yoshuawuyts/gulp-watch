@@ -36,6 +36,8 @@ module.exports = function (opts, cb) {
         gaze.close();
     };
 
+    gaze.on('error', duplex.emit.bind(duplex, 'error'));
+
     writable.on('finish', function () {
         duplex.emit('ready');
     });
