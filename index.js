@@ -1,7 +1,6 @@
 'use strict';
 
-var duplexer2 = require('duplexer2'),
-    stream = require('stream'),
+var Duplex = require('stream').Duplex,
     batch = require('gulp-batch'),
     Gaze = require('gaze'),
     gulp = require('gulp');
@@ -20,16 +19,13 @@ module.exports = function (opts, cb) {
 
     var pathMap = {};
 
-    var writable = new stream.Writable({objectMode: true});
-    writable._write = function _write(file, encoding, done) {
+    var duplex = new Duplex({ objectMode: true, allowHalfOpen: true });
+    duplex._write = function _write(file, encoding, done) {
         pathMap[file.path] = { cwd: file.cwd, base: file.base };
         gaze.add(file.path, done.bind(null, null));
     };
 
-    var readable = new stream.Readable({objectMode: true});
-    readable._read = function _read() { };
-
-    var duplex = duplexer2({ allowHalfOpen: true }, writable, readable);
+    duplex._read = function _read() { };
 
     duplex.close = function () {
         gaze.on('end', duplex.emit.bind(duplex, 'end'));
@@ -38,9 +34,7 @@ module.exports = function (opts, cb) {
 
     gaze.on('error', duplex.emit.bind(duplex, 'error'));
 
-    writable.on('finish', function () {
-        duplex.emit('ready');
-    });
+    duplex.on('finish', duplex.emit.bind(duplex, 'ready'));
 
     function createFile(done, event, filepath) {
         var options = {
@@ -50,20 +44,19 @@ module.exports = function (opts, cb) {
             base: pathMap[filepath] ? pathMap[filepath].base : undefined
         };
         gulp.src([filepath], options)
-            .on('data', function (file) {
-                done(file);
-            })
+            .on('data', done)
             .on('error', duplex.emit.bind(duplex, 'error'));
     }
 
     var domain = require('domain').create();
-    domain.on('error', function (error) {
-        duplex.emit('error', error);
-    });
+    domain.on('error', duplex.emit.bind(duplex, 'error'));
 
-    gaze.on('all', cb ?
-        createFile.bind(null, domain.bind(batch(opts, cb.bind(duplex)))) :
-        createFile.bind(null, readable.emit.bind(readable, 'data'))
+    gaze.on('all',
+        createFile.bind(null,
+            cb ?
+                domain.bind(batch(opts, cb.bind(duplex))) :
+                duplex.emit.bind(duplex, 'data')
+        )
     );
 
     return duplex;
