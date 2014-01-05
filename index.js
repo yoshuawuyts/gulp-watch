@@ -3,10 +3,8 @@
 var duplexer2 = require('duplexer2'),
     stream = require('stream'),
     batch = require('gulp-batch'),
-    File = require('gulp-util').File,
     Gaze = require('gaze'),
-    fs = require('fs'),
-    async = require('async');
+    gulp = require('gulp');
 
 module.exports = function (opts, cb) {
     if (typeof opts !== 'object') {
@@ -46,25 +44,19 @@ module.exports = function (opts, cb) {
     });
 
     function createFile(done, event, filepath) {
-        var file = new File({
-            path: filepath,
-            base: pathMap[filepath] ? pathMap[filepath].base : undefined,
-            cwd: pathMap[filepath] ? pathMap[filepath].cwd : undefined
-        });
-
-        var tasks = { stat: fs.stat.bind(fs, filepath) };
-        if (opts.read) {
-            tasks.contents = opts.buffer ?
-                fs.readFile.bind(fs, filepath) :
-                function (done) { done(null, fs.createReadStream(filepath)); };
-        }
-
-        async.parallel(tasks, function (err, results) {
-            var nullContent = err || !results.contents;
-            file.contents = nullContent ? null : results.contents;
-            file.stat = results.stat;
-            done(file);
-        });
+        var options = {
+            buffer: opts.buffer,
+            read: opts.read,
+            cwd: pathMap[filepath] ? pathMap[filepath].cwd : undefined,
+            base: pathMap[filepath] ? pathMap[filepath].base : undefined
+        };
+        gulp.src([filepath], options)
+            .on('data', function (file) {
+                done(file);
+            })
+            .on('error', function (error) {
+                duplex.emit.bind(duplex, 'error');
+            });
     }
 
     var domain = require('domain').create();
