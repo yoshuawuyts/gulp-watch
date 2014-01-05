@@ -1,6 +1,6 @@
 'use strict';
 
-var MapStream = require('./lib/MapStream'),
+var MapStream = require('./lib/mapstream'),
     PassThrough = require('stream').PassThrough,
     batch = require('gulp-batch'),
     File = require('gulp-util').File,
@@ -34,7 +34,7 @@ module.exports = function (opts, cb) {
         gaze.add(file.path, cb.bind(null, null));
     });
 
-    var emitter = new PassThrough();
+    var emitter = new PassThrough({ objectMode: true });
 
     reciever.on('flush', function () {
         // Source stream is ended and all files is watched
