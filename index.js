@@ -1,7 +1,7 @@
 'use strict';
 
-var MapStream = require('./lib/mapstream'),
-    PassThrough = require('stream').PassThrough,
+var duplexer2 = require('duplexer2'),
+    stream = require('stream'),
     batch = require('gulp-batch'),
     File = require('gulp-util').File,
     Gaze = require('gaze'),
@@ -21,27 +21,40 @@ module.exports = function (opts, cb) {
         throw new Error('Provided callback is not a function: ' + cb);
     }
 
-    if (cb) {
-        cb = batch(opts, cb);
-    }
-
     var gaze = new Gaze();
 
     var pathMap = {};
 
-    var reciever = new MapStream(function (file, cb) {
+    var writable = new stream.Writable({objectMode: true});
+    writable._write = function _write(file, encoding, done) {
         pathMap[file.path] = { cwd: file.cwd, base: file.base };
-        gaze.add(file.path, cb.bind(null, null));
+        gaze.add(file.path, done.bind(null, null));
+    };
+
+    var readable = new stream.Readable({objectMode: true});
+    readable._read = function _read() { };
+
+    var duplex = duplexer2({ allowHalfOpen: true }, writable, readable);
+
+    duplex.close = function () {
+        gaze.on('end', duplex.emit.bind(duplex, 'end'));
+        gaze.close();
+    };
+
+    readable.on('data', function (data) {
+        console.log('readable data: ' + data.path);
     });
 
-    var emitter = new PassThrough({ objectMode: true });
+    readable.on('end', function () {
+        console.log('readable end');
+    });
 
-    reciever.on('flush', function () {
+    writable.on('finish', function () {
         // Source stream is ended and all files is watched
-        emitter.emit('ready');
+        duplex.emit('ready');
     });
 
-    function createFile(cb, event, filepath) {
+    function createFile(done, event, filepath) {
         var file = new File({
             path: filepath,
             base: pathMap[filepath] ? pathMap[filepath].base : undefined,
@@ -52,26 +65,21 @@ module.exports = function (opts, cb) {
         if (opts.read) {
             tasks.contents = opts.buffer ?
                 fs.readFile.bind(fs, filepath) :
-                function (cb) { cb(null, fs.createReadStream(filepath)); };
+                function (done) { done(null, fs.createReadStream(filepath)); };
         }
 
         async.parallel(tasks, function (err, results) {
             var nullContent = err || !results.contents;
             file.contents = nullContent ? null : results.contents;
             file.stat = results.stat;
-            cb(file);
+            done(file);
         });
     }
 
     gaze.on('all', cb ?
-        createFile.bind(null, cb.bind(emitter)) :
-        createFile.bind(null, emitter.emit.bind(emitter, 'data'))
+        createFile.bind(null, batch(opts, cb.bind(duplex))) :
+        createFile.bind(null, readable.emit.bind(readable, 'data'))
     );
 
-    emitter.close = function () {
-        gaze.on('end', emitter.emit.bind(emitter, 'end'));
-        gaze.close();
-    };
-
-    return reciever.pipe(emitter, { end: false });
+    return duplex;
 };

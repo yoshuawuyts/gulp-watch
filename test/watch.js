@@ -54,11 +54,11 @@ describe('gulp-watch', function () {
             check, check,
             function (file) {
                 check(file);
-                watch.close();
+                pipe.close();
             }
         ]);
 
-        var watch = gulp.src(sourceFiles).pipe(watch())
+        var pipe = gulp.src(sourceFiles).pipe(watch())
             .on('data', function (file) {
                 iterator = iterator(file);
             })
@@ -95,7 +95,7 @@ describe('gulp-watch', function () {
                 var actual = events.pop();
                 assert.ok(!actual.contents);
                 assert.ok(actual.stat);
-                this.emit('unwatch');
+                this.close();
             }))
             .on('ready', touchFile.bind(null, null))
             .on('end', done);
