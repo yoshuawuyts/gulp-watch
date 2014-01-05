@@ -21,10 +21,20 @@ gulp.task('mocha', function () {
         .on('error', gutil.log);
 });
 
-gulp.src(['lib/**', 'test/**'], { read: false })
-    .pipe(watch(function(events, cb) {
-        gulp.run('mocha', cb);
-    });
+gulp.task('watch', function() {
+    gulp.src(['lib/**', 'test/**'], { read: false })
+        .pipe(watch(function(events, cb) {
+            gulp.run('mocha', cb);
+        });
+});
+
+gulp.task('default', function () {
+    gulp.run('mocha');
+    gulp.run('watch');
+});
+
+// run `gulp watch` or just `gulp` for watching and rerunning tests
+
 ```
 
 
@@ -37,9 +47,12 @@ var gulp = require('gulp'),
     watch = require('gulp-watch'),
     sass = require('gulp-sass');
 
-gulp.src('scss/**', { read: false })
-    .pipe(watch())
-    .pipe(sass());
+gulp.task('default', function () {
+    gulp.src('scss/**', { read: false })
+        .pipe(watch())
+        .pipe(sass())
+        .pipe(gulp.dest('./dist/'));
+});
 ```
 
 ## API
