@@ -1,6 +1,6 @@
 {
   "name": "gulp-watch",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Watch that you expect from gulp.watch",
   "main": "index.js",
   "keywords": [
