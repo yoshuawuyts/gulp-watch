@@ -15,8 +15,6 @@ var sourceDir = path.join(__dirname, 'fixtures'),
     files = ['test.js', 'test.coffee', 'subfolder/subfile.js'],
     dirs = ['', 'subfolder'];
 
-var touchTimeout = 1000;
-
 function touchFile(file) {
     file = file || files[0];
     fs.writeFileSync(path.join(sourceDir, file), file);
@@ -28,16 +26,6 @@ function touchFiles() {
 
 describe('gulp-watch', function () {
 
-    afterEach(function (done) {
-        if (this.pipe !== undefined) {
-            this.pipe.on('end', done);
-            this.pipe.emit('unwatch');
-            this.pipe = undefined;
-        } else {
-            done();
-        }
-    });
-
     it('should throw, if we provide invalid callback', function () {
         assert.throws(watch.bind(null, 'string'), /Provided callback is not a function/);
     });
@@ -48,12 +36,13 @@ describe('gulp-watch', function () {
     });
 
     it('should capture events with batched version', function (done) {
-        this.pipe = gulp.src(sourceFiles).pipe(watch(function (events) {
-            assert.equal(events.length, 3);
-            done();
-        }));
-
-        setTimeout(touchFiles, touchTimeout);
+        gulp.src(sourceFiles)
+            .pipe(watch(function (events) {
+                assert.equal(events.length, 3);
+                this.close();
+            }))
+            .on('ready', touchFiles.bind(null, null))
+            .on('end', done);
     });
 
     it('should capture events with stream version', function (done) {
@@ -65,21 +54,23 @@ describe('gulp-watch', function () {
             check, check,
             function (file) {
                 check(file);
-                done();
+                watch.close();
             }
         ]);
 
-        this.pipe = gulp.src(sourceFiles).pipe(watch())
+        var watch = gulp.src(sourceFiles).pipe(watch())
             .on('data', function (file) {
                 iterator = iterator(file);
-            });
+            })
+            .on('ready', touchFiles.bind(null, null))
+            .on('end', done);
 
-        setTimeout(touchFiles, touchTimeout);
     });
 
     it('should preserve contents and stat', function (done) {
         var expected;
-        this.pipe = gulp.src(path.join(sourceDir, files[0]))
+
+        gulp.src(path.join(sourceDir, '*'))
             .on('data', function (file) {
                 expected = file;
             })
@@ -88,15 +79,15 @@ describe('gulp-watch', function () {
                 assert.ok(actual.contents);
                 assert.deepEqual(actual.contents, expected.contents);
                 assert.ok(actual.stat);
-                done();
-            }));
-
-        setTimeout(touchFile, touchTimeout);
+                this.close();
+            }))
+            .on('ready', touchFile.bind(null, null))
+            .on('end', done);
     });
 
     it('should support `read: false` option', function (done) {
         var expected;
-        this.pipe = gulp.src(path.join(sourceDir, files[0]))
+        gulp.src(path.join(sourceDir, files[0]))
             .on('data', function (file) {
                 expected = file;
             })
@@ -104,15 +95,15 @@ describe('gulp-watch', function () {
                 var actual = events.pop();
                 assert.ok(!actual.contents);
                 assert.ok(actual.stat);
-                done();
-            }));
-
-        setTimeout(touchFile, touchTimeout);
+                this.emit('unwatch');
+            }))
+            .on('ready', touchFile.bind(null, null))
+            .on('end', done);
     });
 
     it('should support `buffer: false` option', function (done) {
         var expected;
-        this.pipe = gulp.src(path.join(sourceDir, files[0]))
+        gulp.src(path.join(sourceDir, files[0]))
             .on('data', function (file) {
                 expected = file;
             })
@@ -120,10 +111,10 @@ describe('gulp-watch', function () {
                 var actual = events.pop();
                 assert.ok(actual.contents);
                 assert.ok(actual.contents instanceof Stream);
-                done();
-            }));
-
-        setTimeout(touchFile, touchTimeout);
+                this.close();
+            }))
+            .on('ready', touchFile.bind(null, null))
+            .on('end', done);
     });
 
 

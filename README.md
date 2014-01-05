@@ -70,22 +70,18 @@ __Options__:
 
 This object passed to [`gaze` options](https://github.com/shama/gaze#properties) directly, so see documentation there.
 
-For __batched__ mode we are using [`gulp-batch`](https://github.com/floatdrop/gulp-batch#api), so options from there are available (only `timeout` was raised to 500).
+For __batched__ mode we are using [`gulp-batch`](https://github.com/floatdrop/gulp-batch#api), so options from there are available.
+
+__Methods__:
+
+Returned Stream from constructor have some useful methods:
+
+ * `close()` - calling `gaze.close` and emitting `end`, after `gaze.close` is done.
 
 __Events__:
 
-To stop watching for files you can use `unwatch` event:
-
-```js
-var pipe = gulp.src(sourceFiles).pipe(watch(function (events) {
-    // Do some cool stuff
-    pipe.emit('unwatch');
-})).on('end', function () {
-    console.log('Good work!');
-});
-```
-
-After `watch` recieves `unwatch` it will call `gaze.close` and emit `end` event when gaze is stopped watching files.
+ * `end` - all files are stop being watched.
+ * `ready` - all files, that are passed from `gulp.src`, are now being watched.
 
 __Returns__:
 

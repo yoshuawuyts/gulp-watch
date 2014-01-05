@@ -6,7 +6,7 @@ var watch = require('./index');
 
 gulp.task('mocha', function () {
     return gulp.src(['test/*.js'])
-        .pipe(mocha({ timeout: 10000, slow: 8000, reporter: 'list' }))
+        .pipe(mocha({ timeout: 3000, slow: 2000, reporter: 'list' }))
         .on('error', function (err) {
             console.log(err.stack);
         });

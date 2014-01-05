@@ -1,6 +1,7 @@
 'use strict';
 
-var map = require('map-stream'),
+var MapStream = require('./lib/MapStream'),
+    PassThrough = require('stream').PassThrough,
     batch = require('gulp-batch'),
     File = require('gulp-util').File,
     Gaze = require('gaze'),
@@ -12,8 +13,6 @@ module.exports = function (opts, cb) {
         cb = opts;
         opts = { };
     }
-
-    opts.timeout = opts.timeout || 500;
 
     if (typeof opts.read !== 'boolean') { opts.read = true; }
     if (typeof opts.buffer !== 'boolean') { opts.buffer = true; }
@@ -28,28 +27,18 @@ module.exports = function (opts, cb) {
 
     var gaze = new Gaze();
 
-    function preventDefaultEnd(stream) {
-        stream.listeners('end').forEach(function (item) {
-            if (item.name === 'onend') { this.removeListener('end', item); }
-        }, stream);
-    }
-
     var pathMap = {};
 
-    var through = new map(function (file, cb) {
-        pathMap[file.path] = {
-            cwd: file.cwd,
-            base: file.base
-        };
-        gaze.add(file.path);
-        cb(); // Drop all the files! :D
-    })
-    .on('pipe', function (source) {
-        preventDefaultEnd(source);
-    })
-    .on('unwatch', function () {
-        gaze.on('end', this.emit.bind(this, 'end'));
-        gaze.close();
+    var reciever = new MapStream(function (file, cb) {
+        pathMap[file.path] = { cwd: file.cwd, base: file.base };
+        gaze.add(file.path, cb.bind(null, null));
+    });
+
+    var emitter = new PassThrough();
+
+    reciever.on('flush', function () {
+        // Source stream is ended and all files is watched
+        emitter.emit('ready');
     });
 
     function createFile(cb, event, filepath) {
@@ -58,13 +47,14 @@ module.exports = function (opts, cb) {
             base: pathMap[filepath] ? pathMap[filepath].base : undefined,
             cwd: pathMap[filepath] ? pathMap[filepath].cwd : undefined
         });
-        file.event = event;
+
         var tasks = { stat: fs.stat.bind(fs, filepath) };
         if (opts.read) {
             tasks.contents = opts.buffer ?
                 fs.readFile.bind(fs, filepath) :
                 function (cb) { cb(null, fs.createReadStream(filepath)); };
         }
+
         async.parallel(tasks, function (err, results) {
             var nullContent = err || !results.contents;
             file.contents = nullContent ? null : results.contents;
@@ -74,9 +64,14 @@ module.exports = function (opts, cb) {
     }
 
     gaze.on('all', cb ?
-        createFile.bind(null, cb) :
-        createFile.bind(null, through.emit.bind(through, 'data'))
+        createFile.bind(null, cb.bind(emitter)) :
+        createFile.bind(null, emitter.emit.bind(emitter, 'data'))
     );
 
-    return through;
+    emitter.close = function () {
+        gaze.on('end', emitter.emit.bind(emitter, 'end'));
+        gaze.close();
+    };
+
+    return reciever.pipe(emitter, { end: false });
 };
