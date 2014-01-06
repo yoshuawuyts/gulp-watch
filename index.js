@@ -3,7 +3,9 @@
 var Duplex = require('stream').Duplex,
     batch = require('gulp-batch'),
     Gaze = require('gaze'),
-    gulp = require('gulp');
+    gulp = require('gulp'),
+    path = require('path'),
+    gutil = require('gulp-util');
 
 module.exports = function (opts, cb) {
     if (typeof opts !== 'object') {
@@ -34,9 +36,17 @@ module.exports = function (opts, cb) {
 
     gaze.on('error', duplex.emit.bind(duplex, 'error'));
 
-    duplex.on('finish', duplex.emit.bind(duplex, 'ready'));
+    duplex.on('finish', function () {
+        var count = 0;
+        Object.keys(gaze.watched()).forEach(function (dir) {
+            count += gaze.watched()[dir].length;
+        });
+        gutil.log('Watching', gutil.colors.cyan(count), (count === 1 ? 'file...' : 'files...'));
+        duplex.emit('ready');
+    });
 
     function createFile(done, event, filepath) {
+        gutil.log(gutil.colors.magenta(path.basename(filepath)), 'was', event);
         var options = {
             buffer: opts.buffer,
             read: opts.read,
