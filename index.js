@@ -17,7 +17,7 @@ module.exports = function (opts, cb) {
         throw new Error('Provided callback is not a function: ' + cb);
     }
 
-    var gaze = new Gaze();
+    var gaze = new Gaze(opts.glob);
 
     var pathMap = {};
 
@@ -49,6 +49,10 @@ module.exports = function (opts, cb) {
 
         duplex.emit('ready');
     });
+
+    if (opts.glob) {
+        duplex.end();
+    }
 
     function createFile(done, event, filepath) {
 

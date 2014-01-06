@@ -28,18 +28,22 @@ gulp.task('default', function () {
 });
 ```
 
+If you want to watch all directories, include those, which will be created after.
+
+```js
+gulp.task('default', function () {
+    watch('./sass/**/*.scss')
+        .pipe(plumber())
+        .pipe(sass())
+        .pipe(gulp.dest('./dist/'));
+});
+```
+
 ### Trigger for mocha
 
 [Problem with `gulp.watch`](https://github.com/gulpjs/gulp/issues/80) is that will run your test suit on every changed file per once. To avoid this [`gulp-batch`](https://github.com/floatdrop/gulp-batch) was written first, but after some time it became clear, that `gulp.watch` should be a plugin with event batching abilities.
 
 ```js
-// npm i gulp gulp-watch gulp-mocha
-
-var gulp = require('gulp'),
-    mocha = require('gulp-mocha'),
-    watch = require('gulp-watch'),
-    gutil = require('gulp-util');
-
 gulp.task('mocha', function () {
     return gulp.src(['test/*.js'])
         .pipe(mocha({ reporter: 'list' }))
@@ -83,6 +87,12 @@ Default: `undefined`
 Name of the watcher. If it present in options, you will get more readable output:
 
 ![Naming watchers](https://github.com/floatdrop/gulp-watch/raw/master/img/naming.png)
+
+#### options.glob
+Type: `String`  
+Default: `undefined`
+
+Glob, that will be passed to `gaze`. Notice, that you cannot pipe to watcher, that got this option (writable stream will be closed).
 
 ### Methods
 
