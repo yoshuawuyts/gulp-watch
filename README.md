@@ -3,6 +3,10 @@
 
 This is mostly __proof-of-concept__ of streaming version for `gulp.watch`, but it works.
 
+One picture is worth a thousand words:
+
+![Awesome demonstration](https://github.com/floatdrop/gulp-watch/raw/master/demo.gif)
+
 ## Usage
 
 ### Trigger for mocha
