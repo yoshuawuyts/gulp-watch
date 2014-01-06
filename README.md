@@ -16,6 +16,7 @@ This is usefull, when you want blazingly fast rebuilding per-file.
 
 var gulp = require('gulp'),
     watch = require('gulp-watch'),
+    plumber = require('gulp-plumber'),
     sass = require('gulp-sass');
 
 gulp.task('default', function () {
