@@ -1,7 +1,5 @@
 # [gulp](https://github.com/gulpjs/gulp)-watch [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
-> Watch, that you expect
-
-This is mostly __proof-of-concept__ of streaming version for `gulp.watch`, but it works.
+> Watch, that gulp deserves
 
 One picture is worth a thousand words:
 
@@ -9,15 +7,36 @@ One picture is worth a thousand words:
 
 ## Usage
 
+### Continious stream of events
+
+This is usefull, when you want blazingly fast rebuilding per-file.
+
+```js
+// npm i gulp gulp-watch gulp-sass
+
+var gulp = require('gulp'),
+    watch = require('gulp-watch'),
+    sass = require('gulp-sass');
+
+gulp.task('default', function () {
+    gulp.src('scss/**', { read: false })
+        .pipe(watch())
+        .pipe(sass())
+        .pipe(gulp.dest('./dist/'));
+});
+```
+
 ### Trigger for mocha
+
+[Problem with `gulp.watch`](https://github.com/gulpjs/gulp/issues/80) is that will run your test suit on every changed file per once. To avoid this [`gulp-batch`](https://github.com/floatdrop/gulp-batch) was written first, but after some time it became clear, that `gulp.watch` should be a plugin with event batching abilities.
 
 ```js
 // npm i gulp gulp-watch gulp-mocha
 
-var gulp = require('gulp');
-var mocha = require('gulp-mocha');
-var watch = require('gulp-watch');
-var gutil = require('gulp-util')
+var gulp = require('gulp'),
+    mocha = require('gulp-mocha'),
+    watch = require('gulp-watch'),
+    gutil = require('gulp-util');
 
 gulp.task('mocha', function () {
     return gulp.src(['test/*.js'])
@@ -38,25 +57,6 @@ gulp.task('default', function () {
 });
 
 // run `gulp watch` or just `gulp` for watching and rerunning tests
-
-```
-
-
-### Continious stream of events
-
-```js
-// npm i gulp gulp-watch gulp-sass
-
-var gulp = require('gulp'),
-    watch = require('gulp-watch'),
-    sass = require('gulp-sass');
-
-gulp.task('default', function () {
-    gulp.src('scss/**', { read: false })
-        .pipe(watch())
-        .pipe(sass())
-        .pipe(gulp.dest('./dist/'));
-});
 ```
 
 ## API
