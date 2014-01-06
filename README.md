@@ -24,6 +24,9 @@ gulp.task('default', function () {
         .pipe(watch())
         .pipe(plumber()) // This is must have - check its repository
         .pipe(sass())
+        .on('error', function(err) {
+        	console.log(err);
+        })
         .pipe(gulp.dest('./dist/'));
 });
 ```
