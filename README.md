@@ -67,12 +67,12 @@ gulp.task('default', function () {
 
 This function creates have two different modes, that are depends on have you provice callback function, or not. If you do - you get __batched__ mode, if you not - you get __stream__.
 
-__Callback signature__: `function(events, [done])`.
+### Callback signature: `function(events, [done])`
 
  * `events` - is `Array` of incoming events.
  * `done` - is callback for your function signal to batch, that you are done. This allows to run your callback as soon as previous end.
 
-__Options__:
+### Options:
 
 This object passed to [`gaze` options](https://github.com/shama/gaze#properties) directly, so see documentation there. For __batched__ mode we are using [`gulp-batch`](https://github.com/floatdrop/gulp-batch#api), so options from there are available. And of course options for [`gulp.src`](https://github.com/gulpjs/gulp#gulpsrcglobs-options) used too. If you do not want content from watch, then add `read: false` to options object.
 
@@ -84,19 +84,19 @@ Name of the watcher. If it present in options, you will get more readable output
 
 ![Naming watchers](https://github.com/floatdrop/gulp-watch/raw/master/img/naming.png)
 
-__Methods__:
+### Methods
 
 Returned Stream from constructor have some useful methods:
 
  * `close()` - calling `gaze.close` and emitting `end`, after `gaze.close` is done.
 
-__Events__:
+### Events
 
  * `end` - all files are stop being watched.
  * `ready` - all files, that are passed from `gulp.src`, are now being watched.
  * `error` - when something happened inside callback, you will get notified.
 
-__Returns__:
+### Returns
 
  * __Batched mode__  - wrapped callback, that will gather events and call callback.
  * __Stream mode__ - stream, that handles `gulp.src` piping.
