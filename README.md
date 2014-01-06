@@ -93,7 +93,8 @@ Type: `String`
 Default: `undefined`
 
 Glob, that will be passed to `gaze`. 
-__Note___: you cannot pipe to watcher, that got this option (writable stream will be closed).
+
+__Note__: you cannot pipe to watcher, that got this option (writable stream will be closed).
 
 ### Methods
 
