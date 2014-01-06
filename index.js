@@ -65,7 +65,7 @@ module.exports = function (opts, cb) {
         createFile.bind(null,
             cb ?
                 domain.bind(batch(opts, cb.bind(duplex))) :
-                duplex.emit.bind(duplex, 'data')
+                duplex.push.bind(duplex)
         )
     );
 
