@@ -74,6 +74,8 @@ __Callback signature__: `function(events, [done])`.
 
 __Options__:
 
+ * `name` - name of the watcher, that will be printed in console like `<name> saw <file> <event>`
+
 This object passed to [`gaze` options](https://github.com/shama/gaze#properties) directly, so see documentation there.
 
 For __batched__ mode we are using [`gulp-batch`](https://github.com/floatdrop/gulp-batch#api), so options from there are available.

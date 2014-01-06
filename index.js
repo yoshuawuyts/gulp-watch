@@ -41,18 +41,28 @@ module.exports = function (opts, cb) {
         Object.keys(gaze.watched()).forEach(function (dir) {
             count += gaze.watched()[dir].length;
         });
-        gutil.log('Watching', gutil.colors.cyan(count), (count === 1 ? 'file...' : 'files...'));
+
+        gutil.log(
+            (opts.name ? gutil.colors.cyan(opts.name) + ' is watching': 'Watching'),
+            gutil.colors.cyan(count),
+            (count === 1 ? 'file...' : 'files...'));
+
         duplex.emit('ready');
     });
 
     function createFile(done, event, filepath) {
-        gutil.log(gutil.colors.magenta(path.basename(filepath)), 'was', event);
+
+        var msg = [gutil.colors.magenta(path.basename(filepath)), 'was', event];
+        if (opts.name) { msg.unshift(gutil.colors.cyan(opts.name) + ' saw'); }
+        gutil.log.apply(gutil, msg);
+
         var options = {
             buffer: opts.buffer,
             read: opts.read,
             cwd: pathMap[filepath] ? pathMap[filepath].cwd : undefined,
             base: pathMap[filepath] ? pathMap[filepath].base : undefined
         };
+
         gulp.src([filepath], options)
             .on('data', done)
             .on('error', duplex.emit.bind(duplex, 'error'));
