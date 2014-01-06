@@ -74,6 +74,7 @@ __Callback signature__: `function(events, [done])`.
 
 __Options__:
 
+This object passed to [`gaze` options](https://github.com/shama/gaze#properties) directly, so see documentation there. For __batched__ mode we are using [`gulp-batch`](https://github.com/floatdrop/gulp-batch#api), so options from there are available. And of course options for [`gulp.src`](https://github.com/gulpjs/gulp#gulpsrcglobs-options) used too. If you do not want content from watch, then add `read: false` to options object.
 
 #### options.name
 Type: `String`  
@@ -82,12 +83,6 @@ Default: `undefined`
 Name of the watcher. If it present in options, you will get more readable output:
 
 ![Naming watchers](https://github.com/floatdrop/gulp-watch/raw/master/img/naming.png)
-
-This object passed to [`gaze` options](https://github.com/shama/gaze#properties) directly, so see documentation there.
-
-For __batched__ mode we are using [`gulp-batch`](https://github.com/floatdrop/gulp-batch#api), so options from there are available.
-
-And of course options for [`gulp.src`](https://github.com/gulpjs/gulp#gulpsrcglobs-options) used too. If you do not want content from watch, then add `read: false` to options object.
 
 __Methods__:
 
