@@ -9,6 +9,7 @@ lib-cov
 .tags
 .tags_sorted_by_file
 .gemtags
+.DS_Store
 
 pids
 logs

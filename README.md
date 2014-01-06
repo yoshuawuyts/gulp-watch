@@ -3,7 +3,7 @@
 
 One picture is worth a thousand words:
 
-![Awesome demonstration](https://github.com/floatdrop/gulp-watch/raw/master/demo.gif)
+![Awesome demonstration](https://github.com/floatdrop/gulp-watch/raw/master/img/demo.gif)
 
 ## Usage
 
@@ -74,7 +74,14 @@ __Callback signature__: `function(events, [done])`.
 
 __Options__:
 
- * `name` - name of the watcher, that will be printed in console like `<name> saw <file> <event>`
+
+#### options.name
+Type: `String`  
+Default: `undefined`
+
+Name of the watcher. If it present in options, you will get more readable output:
+
+![Naming watchers](https://github.com/floatdrop/gulp-watch/raw/master/img/naming.png)
 
 This object passed to [`gaze` options](https://github.com/shama/gaze#properties) directly, so see documentation there.
 
