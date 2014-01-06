@@ -92,9 +92,12 @@ Name of the watcher. If it present in options, you will get more readable output
 Type: `String`  
 Default: `undefined`
 
-Glob, that will be passed to `gaze`. 
+Glob, that will be passed to `gaze`.
 
-__Note__: you cannot pipe to watcher, that got this option (writable stream will be closed).
+__Notes__: 
+ 
+1. you cannot pipe to watcher, that got this option (writable stream will be closed).
+2. you will receive vinyl File object only on changes.
 
 ### Methods
 

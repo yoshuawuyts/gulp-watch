@@ -25,6 +25,7 @@ module.exports = function (opts, cb) {
     duplex._write = function _write(file, encoding, done) {
         pathMap[file.path] = { cwd: file.cwd, base: file.base };
         gaze.add(file.path, done.bind(null, null));
+        if (opts.passThrough !== false) { duplex.push(file); }
     };
 
     duplex._read = function _read() { };
