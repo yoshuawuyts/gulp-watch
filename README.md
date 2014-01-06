@@ -92,7 +92,8 @@ Name of the watcher. If it present in options, you will get more readable output
 Type: `String`  
 Default: `undefined`
 
-Glob, that will be passed to `gaze`. Notice, that you cannot pipe to watcher, that got this option (writable stream will be closed).
+Glob, that will be passed to `gaze`. 
+__Note___: you cannot pipe to watcher, that got this option (writable stream will be closed).
 
 ### Methods
 
