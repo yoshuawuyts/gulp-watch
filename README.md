@@ -80,6 +80,12 @@ This function creates have two different modes, that are depends on have you pro
 
 This object passed to [`gaze` options](https://github.com/shama/gaze#properties) directly, so see documentation there. For __batched__ mode we are using [`gulp-batch`](https://github.com/floatdrop/gulp-batch#api), so options from there are available. And of course options for [`gulp.src`](https://github.com/gulpjs/gulp#gulpsrcglobs-options) used too. If you do not want content from watch, then add `read: false` to options object.
 
+#### options.passThrough
+Type: `Boolean`  
+Default: `true`
+
+This options will pass vinyl objects, that was piped into `watch` to next Stream in pipeline.
+
 #### options.name
 Type: `String`  
 Default: `undefined`
