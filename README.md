@@ -21,6 +21,7 @@ var gulp = require('gulp'),
 gulp.task('default', function () {
     gulp.src('scss/**', { read: false })
         .pipe(watch())
+        .pipe(plumber()) // This is must have - check its repository
         .pipe(sass())
         .pipe(gulp.dest('./dist/'));
 });
