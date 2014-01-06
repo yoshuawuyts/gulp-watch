@@ -32,7 +32,7 @@ If you want to watch all directories, include those, which will be created after
 
 ```js
 gulp.task('default', function () {
-    watch('./sass/**/*.scss')
+    watch('sass/**/*.scss')
         .pipe(plumber())
         .pipe(sass())
         .pipe(gulp.dest('./dist/'));
