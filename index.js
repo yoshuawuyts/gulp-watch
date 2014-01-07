@@ -17,31 +17,30 @@ module.exports = function (opts, cb) {
         throw new Error('Provided callback is not a function: ' + cb);
     }
 
-    var gaze = new Gaze(opts.glob);
-
     var pathMap = {};
 
     var duplex = new Duplex({ objectMode: true, allowHalfOpen: true });
+    duplex.gaze = new Gaze(opts.glob);
 
     duplex._write = function _write(file, encoding, done) {
         pathMap[file.path] = { cwd: file.cwd, base: file.base };
-        gaze.add(file.path, done.bind(null, null));
+        duplex.gaze.add(file.path, done.bind(null, null));
         if (opts.passThrough !== false) { duplex.push(file); }
     };
 
     duplex._read = function _read() { };
 
     duplex.close = function () {
-        gaze.on('end', duplex.emit.bind(duplex, 'end'));
-        gaze.close();
+        duplex.gaze.on('end', duplex.emit.bind(duplex, 'end'));
+        duplex.gaze.close();
     };
 
-    gaze.on('error', duplex.emit.bind(duplex, 'error'));
+    duplex.gaze.on('error', duplex.emit.bind(duplex, 'error'));
 
     duplex.on('finish', function () {
         var count = 0;
-        Object.keys(gaze.watched()).forEach(function (dir) {
-            count += gaze.watched()[dir].length;
+        Object.keys(duplex.gaze.watched()).forEach(function (dir) {
+            count += duplex.gaze.watched()[dir].length;
         });
 
         gutil.log(
@@ -79,9 +78,7 @@ module.exports = function (opts, cb) {
         cb.domain.on('error', duplex.emit.bind(duplex, 'error'));
     }
 
-    gaze.on('all', createFile.bind(null, cb || duplex.push.bind(duplex)));
-
-    duplex.gaze = gaze;
+    duplex.gaze.on('all', createFile.bind(null, cb || duplex.push.bind(duplex)));
 
     return duplex;
 };
