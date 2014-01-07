@@ -17,7 +17,7 @@ var fixtures = path.join(__dirname, 'fixtures'),
 var touch = function (file) {
     setTimeout(function () {
         fs.writeFileSync(file, path.basename(file));
-    }, 800);
+    }, 1000);
 };
 var touchOneFixture = function () { touch(oneFixture); };
 
@@ -117,7 +117,7 @@ describe('Batching', function () {
 
     it('should call callback with detected event', function (done) {
         this.watcher = watch(function (events) {
-                assert.equal(events.length === 1);
+                assert.equal(events.length, 1);
                 done();
             })
             .on('error', done)
@@ -129,7 +129,7 @@ describe('Batching', function () {
 
     it('should call callback with detected event in async mode', function (done) {
         this.watcher = watch(function (events, cb) {
-                assert.equal(events.length === 1);
+                assert.equal(events.length, 1);
                 done();
                 cb();
             })

@@ -18,7 +18,7 @@ var fixtures = path.join(__dirname, 'fixtures'),
 var touch = function (file) {
     setTimeout(function () {
         fs.writeFileSync(file, path.basename(file));
-    }, 800);
+    }, 1000);
 };
 var touchOneFixture = function () { touch(oneFixture); };
 

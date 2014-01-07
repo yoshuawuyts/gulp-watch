@@ -9,7 +9,7 @@
     "gulpplugin"
   ],
   "scripts": {
-    "test": "mocha test/*.js --reporter spec --timeout 3000"
+    "test": "mocha test/*.js --reporter spec --timeout 5000"
   },
   "repository": {
     "type": "git",
