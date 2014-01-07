@@ -48,6 +48,7 @@ describe('Streaming', function () {
                 .on('data', function (file) {
                     assert.ok(file.contents);
                     assert.ok(file.contents instanceof Stream);
+                    done();
                 })
                 .on('error', done)
                 .on('ready', touchOneFixture);
