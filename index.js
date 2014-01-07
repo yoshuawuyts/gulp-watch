@@ -22,6 +22,7 @@ module.exports = function (opts, cb) {
     var pathMap = {};
 
     var duplex = new Duplex({ objectMode: true, allowHalfOpen: true });
+
     duplex._write = function _write(file, encoding, done) {
         pathMap[file.path] = { cwd: file.cwd, base: file.base };
         gaze.add(file.path, done.bind(null, null));
@@ -48,11 +49,11 @@ module.exports = function (opts, cb) {
             gutil.colors.cyan(count),
             (count === 1 ? 'file...' : 'files...'));
 
-        duplex.emit('ready');
+        process.nextTick(duplex.emit.bind(duplex, 'ready'));
     });
 
     if (opts.glob) {
-        duplex.end();
+        process.nextTick(duplex.end.bind(duplex));
     }
 
     function createFile(done, event, filepath) {
@@ -73,16 +74,11 @@ module.exports = function (opts, cb) {
             .on('error', duplex.emit.bind(duplex, 'error'));
     }
 
-    var domain = require('domain').create();
-    domain.on('error', duplex.emit.bind(duplex, 'error'));
+    if (cb) {
+        cb = batch(opts, cb.bind(duplex));
+    }
 
-    gaze.on('all',
-        createFile.bind(null,
-            cb ?
-                domain.bind(batch(opts, cb.bind(duplex))) :
-                duplex.push.bind(duplex)
-        )
-    );
+    gaze.on('all', createFile.bind(null, cb || duplex.push.bind(duplex)));
 
     return duplex;
 };
