@@ -116,7 +116,7 @@ Returned Stream from constructor have some useful methods:
 
 ### Properties
 
- * `gaze` - instance of Gaze. Have fun.
+ * `gaze` - instance of `gaze` in case you want to call it methods (for example `remove`). Be aware __no one guarantee you nothing__ after you hacked on `gaze`.
 
 ### Returns
 
