@@ -11,8 +11,6 @@ var watch = require('..'),
     fs = require('fs'),
     Stream = require('stream').Stream;
 
-// require('longjohn');
-
 var fixtures = path.join(__dirname, 'fixtures'),
     allFixtures = path.join(fixtures, '**/*'),
     oneFixture = path.join(fixtures, 'test.js');
@@ -201,92 +199,4 @@ describe('Streaming', function () {
             done();
         }
     });
-
-/*    it('should capture event with batched version', function (done) {
-        gulp.src(sourceFiles)
-            .pipe(watch(function (events) {
-                assert.equal(events.length, 3);
-                this.close();
-            }))
-            .on('ready', touchs.bind(null, null))
-            .on('error', done)
-            .on('end', done);
-    });
-
-    it('should capture event with stream version', function (done) {
-        function check(file) {
-            assert.ok(files.indexOf(file.relative) !== -1);
-        }
-
-        var iterator = async.iterator([
-            check, check,
-            function (file) {
-                check(file);
-                pipe.close();
-            }
-        ]);
-
-        var pipe = gulp.src(sourceFiles).pipe(watch())
-            .on('data', function (file) {
-                iterator = iterator(file);
-            })
-            .on('ready', touchFiles.bind(null, null))
-            .on('error', done)
-            .on('end', done);
-
-    });
-
-    it('should preserve contents and stat', function (done) {
-        var expected;
-
-        gulp.src(path.join(sourceDir, '*'))
-            .on('data', function (file) {
-                expected = file;
-            })
-            .pipe(watch(function (events) {
-                var actual = events.pop();
-                assert.ok(actual.contents);
-                assert.deepEqual(actual.contents, expected.contents);
-                assert.ok(actual.stat);
-                this.close();
-            }))
-            .on('ready', touchFile.bind(null, null))
-            .on('error', done)
-            .on('end', done);
-    });
-
-    it('should support `read: false` option', function (done) {
-        var expected;
-        gulp.src(path.join(sourceDir, files[0]))
-            .on('data', function (file) {
-                expected = file;
-            })
-            .pipe(watch({ read: false }, function (events) {
-                var actual = events.pop();
-                assert.ok(!actual.contents);
-                assert.ok(actual.stat);
-                this.close();
-            }))
-            .on('ready', touchFile.bind(null, null))
-            .on('error', done)
-            .on('end', done);
-    });
-
-    it('should support `buffer: false` option', function (done) {
-        var expected;
-        gulp.src(path.join(sourceDir, files[0]))
-            .on('data', function (file) {
-                expected = file;
-            })
-            .pipe(watch({ buffer: false }, function (events) {
-                var actual = events.pop();
-                assert.ok(actual.contents);
-                assert.ok(actual.contents instanceof Stream);
-                this.close();
-            }))
-            .on('ready', touchFile.bind(null, null))
-            .on('error', done)
-            .on('end', done);
-    });
-    */
 });

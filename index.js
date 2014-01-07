@@ -76,6 +76,7 @@ module.exports = function (opts, cb) {
 
     if (cb) {
         cb = batch(opts, cb.bind(duplex));
+        cb.domain.on('error', duplex.emit.bind(duplex, 'error'));
     }
 
     gaze.on('all', createFile.bind(null, cb || duplex.push.bind(duplex)));

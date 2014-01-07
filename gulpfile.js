@@ -4,6 +4,8 @@ var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var watch = require('./index');
 
+// require('longjohn');
+
 gulp.task('watch', function (cb) {
     gulp.src(['test/*.js', 'index.js'], { read: false })
         .pipe(watch(function (events, cb) {
