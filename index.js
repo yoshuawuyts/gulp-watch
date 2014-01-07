@@ -81,5 +81,7 @@ module.exports = function (opts, cb) {
 
     gaze.on('all', createFile.bind(null, cb || duplex.push.bind(duplex)));
 
+    duplex.gaze = gaze;
+
     return duplex;
 };
