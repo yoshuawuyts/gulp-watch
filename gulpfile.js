@@ -9,7 +9,12 @@ gulp.task('watch', function (cb) {
         .pipe(watch(function (events, cb) {
             gulp.src(['test/*.js'])
                 .pipe(mocha({ reporter: 'spec' }))
-                .on('error', cb.bind(null, null))
+                .on('error', function (err) {
+                    if (!/tests? failed/.test(err.stack)) {
+                        console.log(err.stack);
+                    }
+                    cb();
+                })
                 .on('end', cb);
         }))
         .on('end', cb);
