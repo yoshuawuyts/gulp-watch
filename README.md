@@ -114,6 +114,10 @@ Returned Stream from constructor have some useful methods:
  * `ready` - all files, that are passed from `gulp.src`, are now being watched.
  * `error` - when something happened inside callback, you will get notified.
 
+### Properties
+
+ * `gaze` - instance of Gaze. Have fun.
+
 ### Returns
 
  * __Batched mode__  - wrapped callback, that will gather events and call callback.
