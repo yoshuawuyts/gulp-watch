@@ -14,32 +14,37 @@ var fixtures = path.join(__dirname, 'fixtures'),
     allFixtures = path.join(fixtures, '**/*'),
     oneFixture = path.join(fixtures, 'test.js');
 
-var touch = function (file) { fs.writeFileSync(file, path.basename(file)); };
+var touch = function (file) {
+    setTimeout(function () {
+        fs.writeFileSync(file, path.basename(file));
+    }, 800);
+};
 var touchOneFixture = function () { touch(oneFixture); };
 
 describe('Batching', function () {
 
     describe('Options', function () {
         it('option.passThrough should pass events with default value', function (done) {
-            this.watcher = watch(function () { })
-                .on('data', function (file) {
-                    assert.ok(file);
-                    done();
-                })
+            this.watcher = watch(function () {})
+                .on('data', done.bind(null, null))
                 .on('error', done);
             this.watcher.write(this.expected);
         });
 
         it('option.passThrough should block events with `false`', function (done) {
-            this.watcher = watch({ passThrough: false }, done.bind(null, null))
+            this.watcher = watch({ passThrough: false },
+                function (events) {
+                    done();
+                })
                 .on('data', done)
                 .on('error', done)
                 .on('ready', touchOneFixture);
             this.watcher.write(this.expected);
+            this.watcher.end();
         });
 
-        it('option.buffer should make contents Stream', function (done) {
-            this.watcher = watch({ buffer: true }, function (events) {
+        it('option.buffer `false` should make contents Stream', function (done) {
+            this.watcher = watch({ buffer: false }, function (events) {
                     assert.equal(events.length, 1);
                     var file = events.pop();
                     assert.ok(file.contents);
@@ -57,6 +62,7 @@ describe('Batching', function () {
                     assert.equal(events.length, 1);
                     var file = events.pop();
                     assert.ok(!file.contents);
+                    done();
                 })
                 .on('error', done)
                 .on('ready', touchOneFixture);
@@ -83,7 +89,9 @@ describe('Batching', function () {
         this.watcher = watch(function () {
                 throw new Error('Bang!');
             })
+            .on('ready', touchOneFixture)
             .on('error', done.bind(null, null));
+        this.watcher.write(this.expected);
         this.watcher.end();
     });
 
@@ -91,7 +99,9 @@ describe('Batching', function () {
         this.watcher = watch(function (events, cb) {
                 throw new Error('Bang!');
             })
+            .on('ready', touchOneFixture)
             .on('error', done.bind(null, null));
+        this.watcher.write(this.expected);
         this.watcher.end();
     });
 
@@ -99,30 +109,34 @@ describe('Batching', function () {
         this.watcher = watch(function (events, cb) {
                 cb(new Error('Bang!'));
             })
+            .on('ready', touchOneFixture)
             .on('error', done.bind(null, null));
+        this.watcher.write(this.expected);
         this.watcher.end();
     });
 
     it('should call callback with detected event', function (done) {
         this.watcher = watch(function (events) {
                 assert.equal(events.length === 1);
+                done();
             })
             .on('error', done)
             .on('ready', touchOneFixture);
 
-        this.watcher.write({ path: allFixtures });
+        this.watcher.write(this.expected);
         this.watcher.end();
     });
 
     it('should call callback with detected event in async mode', function (done) {
         this.watcher = watch(function (events, cb) {
                 assert.equal(events.length === 1);
+                done();
                 cb();
             })
             .on('error', done)
             .on('ready', touchOneFixture);
 
-        this.watcher.write({ path: allFixtures });
+        this.watcher.write(this.expected);
         this.watcher.end();
     });
 

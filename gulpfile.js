@@ -10,7 +10,7 @@ gulp.task('watch', function (cb) {
     gulp.src(['test/*.js', 'index.js'], { read: false })
         .pipe(watch(function (events, cb) {
             gulp.src(['test/*.js'])
-                .pipe(mocha({ reporter: 'spec' }))
+                .pipe(mocha({ timeout: 3000, reporter: 'spec' }))
                 .on('error', function (err) {
                     if (!/tests? failed/.test(err.stack)) {
                         console.log(err.stack);

@@ -16,7 +16,9 @@ var fixtures = path.join(__dirname, 'fixtures'),
     oneFixture = path.join(fixtures, 'test.js');
 
 var touch = function (file) {
-    fs.writeFileSync(file, path.basename(file));
+    setTimeout(function () {
+        fs.writeFileSync(file, path.basename(file));
+    }, 800);
 };
 var touchOneFixture = function () { touch(oneFixture); };
 
@@ -38,10 +40,11 @@ describe('Streaming', function () {
                 .on('error', done)
                 .on('end', done.bind(null, null));
             this.watcher.write(this.expected);
+            this.watcher.close();
         });
 
-        it('option.buffer should make contents Stream', function (done) {
-            this.watcher = watch({ buffer: true })
+        it('option.buffer `false` should make contents Stream', function (done) {
+            this.watcher = watch({ buffer: false, passThrough: false })
                 .on('data', function (file) {
                     assert.ok(file.contents);
                     assert.ok(file.contents instanceof Stream);
@@ -53,7 +56,7 @@ describe('Streaming', function () {
         });
 
         it('option.read should remove contents from emitted files', function (done) {
-            this.watcher = watch({ read: false })
+            this.watcher = watch({ read: false, passThrough: false })
                 .on('data', function (file) {
                     assert.ok(!file.contents);
                     done();
