@@ -8,7 +8,8 @@ var watch = require('..'),
     assert = require('assert'),
     path = require('path'),
     gulp = require('gulp'),
-    fs = require('fs');
+    fs = require('fs'),
+    Stream = require('stream').Stream;
 
 // require('longjohn');
 
@@ -30,21 +31,39 @@ describe('Streaming', function () {
                     done();
                 })
                 .on('error', done);
-            this.watcher.write({ path: './' });
+            this.watcher.write(this.expected);
         });
 
         it('option.passThrough should block events with `false`', function (done) {
             this.watcher = watch({ passThrough: false })
+                .on('data', done)
+                .on('error', done)
+                .on('end', done.bind(null, null));
+            this.watcher.write(this.expected);
+        });
+
+        it('option.buffer should make contents Stream', function (done) {
+            this.watcher = watch({ buffer: true })
                 .on('data', function (file) {
-                    done(file);
+                    assert.ok(file.contents);
+                    assert.ok(file.contents instanceof Stream);
                 })
                 .on('error', done)
-                .on('end', function () {
-                    this.watcher = undefined;
+                .on('ready', touchOneFixture);
+            this.watcher.write(this.expected);
+            this.watcher.end();
+        });
+
+        it('option.read should remove contents from emitted files', function (done) {
+            this.watcher = watch({ read: false })
+                .on('data', function (file) {
+                    assert.ok(!file.contents);
                     done();
-                }.bind(this));
-            this.watcher.write({ path: './' });
-            this.watcher.close();
+                })
+                .on('error', done)
+                .on('ready', touchOneFixture);
+            this.watcher.write(this.expected);
+            this.watcher.end();
         });
 
     });
@@ -155,7 +174,7 @@ describe('Streaming', function () {
             this.watcher = watch()
                 .on('finish', done)
                 .on('end', done.bind(null, '`end` was emitted'));
-            this.watcher.write({ path: oneFixture });
+            this.watcher.write(this.expected);
             this.watcher.end();
         });
     });

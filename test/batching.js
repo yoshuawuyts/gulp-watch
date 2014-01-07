@@ -7,7 +7,8 @@ var watch = require('..'),
     gulp = require('gulp'),
     assert = require('assert'),
     path = require('path'),
-    fs = require('fs');
+    fs = require('fs'),
+    Stream = require('stream').Stream;
 
 var fixtures = path.join(__dirname, 'fixtures'),
     allFixtures = path.join(fixtures, '**/*'),
@@ -17,6 +18,54 @@ var touch = function (file) { fs.writeFileSync(file, path.basename(file)); };
 var touchOneFixture = function () { touch(oneFixture); };
 
 describe('Batching', function () {
+
+    describe('Options', function () {
+        it('option.passThrough should pass events with default value', function (done) {
+            this.watcher = watch(function () { })
+                .on('data', function (file) {
+                    assert.ok(file);
+                    done();
+                })
+                .on('error', done);
+            this.watcher.write(this.expected);
+        });
+
+        it('option.passThrough should block events with `false`', function (done) {
+            this.watcher = watch({ passThrough: false }, done.bind(null, null))
+                .on('data', done)
+                .on('error', done)
+                .on('ready', touchOneFixture);
+            this.watcher.write(this.expected);
+        });
+
+        it('option.buffer should make contents Stream', function (done) {
+            this.watcher = watch({ buffer: true }, function (events) {
+                    assert.equal(events.length, 1);
+                    var file = events.pop();
+                    assert.ok(file.contents);
+                    assert.ok(file.contents instanceof Stream);
+                    done();
+                })
+                .on('error', done)
+                .on('ready', touchOneFixture);
+            this.watcher.write(this.expected);
+            this.watcher.end();
+        });
+
+        it('option.read should remove contents from emitted files', function (done) {
+            this.watcher = watch({ read: false }, function (events) {
+                    assert.equal(events.length, 1);
+                    var file = events.pop();
+                    assert.ok(!file.contents);
+                })
+                .on('error', done)
+                .on('ready', touchOneFixture);
+            this.watcher.write(this.expected);
+            this.watcher.end();
+        });
+
+    });
+
     it('should emit `ready` event', function (done) {
         this.watcher = watch(function () { }).on('ready', done);
         this.watcher.end();
