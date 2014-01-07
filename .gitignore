@@ -10,6 +10,7 @@ lib-cov
 .tags_sorted_by_file
 .gemtags
 .DS_Store
+coverage
 
 pids
 logs

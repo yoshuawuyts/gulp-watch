@@ -1,4 +1,4 @@
-# [gulp](https://github.com/gulpjs/gulp)-watch [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
+# [gulp](https://github.com/gulpjs/gulp)-watch [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status](https://coveralls.io/repos/floatdrop/gulp-watch/badge.png)](https://coveralls.io/r/floatdrop/gulp-watch) [![Dependency Status][depstat-image]][depstat-url]
 > Watch, that gulp deserves
 
 One picture is worth a thousand words:
