@@ -22,7 +22,7 @@ var gulp = require('gulp'),
 gulp.task('default', function () {
     gulp.src('scss/**', { read: false })
         .pipe(watch())
-        .pipe(plumber()) // I recommend to pipe gulp-plumber after watch, check it's repo for explanation
+        .pipe(plumber()) // This will pipes working after error event
         .pipe(sass())
         .pipe(gulp.dest('./dist/'));
 });
@@ -48,7 +48,7 @@ var grep = require('gulp-grep-stream');
 
 gulp.task('watch', function() {
     gulp.src(['lib/**', 'test/**'], { read: false })
-        .pipe(watch())
+        .pipe(watch({ emit: 'all' }))
         .pipe(grep('*/test/*.js'))
         .pipe(mocha({ reporter: 'spec' }))
         .on('error', function() {
