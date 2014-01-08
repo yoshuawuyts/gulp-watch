@@ -42,6 +42,19 @@ describe('Integration', function () {
             });
     });
 
+    it('should emit data on underlying stream under plumber failing, without error', function (done) {
+        this.watcher = watch({ glob: allFixtures })
+            .on('data', function (file) {
+                assert.equal(path.basename(file.path), 'test.js');
+                done();
+            })
+            .on('error', done)
+            .on('ready', touchOneFixture);
+        this.watcher
+            .pipe(plumber())
+            .pipe(failingStream);
+    });
+
     afterEach(function (done) {
         if (this.watcher) {
             this.watcher.on('end', done);
