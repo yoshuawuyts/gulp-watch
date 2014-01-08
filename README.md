@@ -84,7 +84,7 @@ Default: `one`
 This options defines emit strategy:
 
  * `one` - emit only changed file
- * `all` - emit all watched files, when one changes
+ * `all` - emit all watched files (and folders), when one changes
 
 #### options.passThrough
 Type: `Boolean`  

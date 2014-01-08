@@ -7,11 +7,22 @@ var Duplex = require('stream').Duplex,
     path = require('path'),
     gutil = require('gulp-util');
 
+function getWatchedFiles(gaze) {
+    var files = [];
+    var watched = gaze.watched();
+    Object.keys(watched).forEach(function (dir) {
+        files = files.concat(watched[dir]);
+    });
+    return files;
+}
+
 module.exports = function (opts, cb) {
     if (typeof opts !== 'object') {
         cb = opts;
         opts = { };
     }
+
+    opts.emit = opts.emit || 'one';
 
     if (cb && typeof cb !== 'function') {
         throw new Error('Provided callback is not a function: ' + cb);
@@ -38,10 +49,7 @@ module.exports = function (opts, cb) {
     duplex.gaze.on('error', duplex.emit.bind(duplex, 'error'));
 
     duplex.on('finish', function () {
-        var count = 0;
-        Object.keys(duplex.gaze.watched()).forEach(function (dir) {
-            count += duplex.gaze.watched()[dir].length;
-        });
+        var count = getWatchedFiles(duplex.gaze).length;
 
         gutil.log(
             (opts.name ? gutil.colors.cyan(opts.name) + ' is watching': 'Watching'),
@@ -68,7 +76,11 @@ module.exports = function (opts, cb) {
             base: pathMap[filepath] ? pathMap[filepath].base : undefined
         };
 
-        gulp.src([filepath], options)
+        var glob = [filepath];
+
+        if (opts.emit === 'all') { glob = getWatchedFiles(duplex.gaze); }
+
+        gulp.src(glob, options)
             .on('data', done)
             .on('error', duplex.emit.bind(duplex, 'error'));
     }
