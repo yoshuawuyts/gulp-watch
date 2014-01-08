@@ -77,6 +77,15 @@ This function creates have two different modes, that are depends on have you pro
 
 This object passed to [`gaze` options](https://github.com/shama/gaze#properties) directly, so see documentation there. For __batched__ mode we are using [`gulp-batch`](https://github.com/floatdrop/gulp-batch#api), so options from there are available. And of course options for [`gulp.src`](https://github.com/gulpjs/gulp#gulpsrcglobs-options) used too. If you do not want content from watch, then add `read: false` to options object.
 
+#### options.emit
+Type: `String`
+Default: `one`
+
+This options defines emit strategy:
+
+ * `one` - emit only changed file
+ * `all` - emit all watched files (and folders), when one changes
+
 #### options.passThrough
 Type: `Boolean`  
 Default: `true`
