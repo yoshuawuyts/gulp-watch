@@ -28,7 +28,8 @@
     "mocha-lcov-reporter": "0.0.1",
     "istanbul": "~0.1.44",
     "gulp-plumber": "~0.2.3",
-    "longjohn": "~0.2.2"
+    "longjohn": "~0.2.2",
+    "event-stream": "~3.0.20"
   },
   "dependencies": {
     "gulp": "~3.2.4",
