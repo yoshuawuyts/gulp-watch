@@ -43,6 +43,8 @@ gulp.task('default', function () {
 
 [Problem with `gulp.watch`](https://github.com/gulpjs/gulp/issues/80) is that will run your test suit on every changed file per once. To avoid this [`gulp-batch`](https://github.com/floatdrop/gulp-batch) was written first, but after some time it became clear, that `gulp.watch` should be a plugin with event batching abilities.
 
+__This example will be working after https://github.com/sindresorhus/gulp-mocha/pull/6 is pulled in gulp-mocha__
+
 ```js
 var grep = require('gulp-grep-stream');
 
