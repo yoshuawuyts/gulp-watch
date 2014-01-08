@@ -45,7 +45,7 @@ gulp.task('default', function () {
 
 ```js
 var grep = require('gulp-grep-stream');
-var mocha = require('gulp-mocha-stream');
+var mocha = require('gulp-mocha');
 
 gulp.task('watch', function() {
     gulp.src(['lib/**', 'test/**'], { read: false })
