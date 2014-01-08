@@ -4,7 +4,8 @@
 delete require.cache[require.resolve('..')];
 var watch = require('..'),
     assert = require('assert'),
-    Stream = require('stream').Stream,
+    stream = require('stream'),
+    Stream = stream.Stream,
     fs = require('fs'),
     path = require('path');
 
