@@ -28,7 +28,7 @@ gulp.task('default', function () {
 });
 ```
 
-If you want to watch all directories, include those, which will be created after.
+If you want to watch all directories, include those, which will be __created__ after:
 
 ```js
 gulp.task('default', function () {
