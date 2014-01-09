@@ -51,7 +51,7 @@ gulp.task('watch', function() {
     gulp.src(['lib/**', 'test/**'], { read: false })
         .pipe(watch({ emit: 'all' }))
         .pipe(grep('*/test/*.js'))
-        .pipe(mocha({ streaming: true, reporter: 'spec' }))
+        .pipe(mocha({ reporter: 'spec' }))
         .on('error', function() {
             if (!/tests? failed/.test(err.stack)) {
                 console.log(err.stack);
