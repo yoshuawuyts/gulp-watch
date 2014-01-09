@@ -89,7 +89,7 @@ module.exports = function (opts, cb) {
     duplex.gaze.on('all', createFile.bind(null, cb || duplex.push.bind(duplex)));
 
     if (opts.glob) {
-        if (opts.emitOnWatch === true) {
+        if (opts.emitOnGlob === true) {
             gulp.src(opts.glob, opts)
                 .on('data', cb || duplex.push.bind(duplex))
                 .on('error', duplex.emit.bind(duplex, 'error'));
