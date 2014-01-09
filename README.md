@@ -155,4 +155,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 [travis-image]: https://travis-ci.org/floatdrop/gulp-watch.png?branch=master
 
 [depstat-url]: https://david-dm.org/floatdrop/gulp-watch
-[depstat-image]: https://david-dm.org/floatdrop/gulp-watch.png
+[depstat-image]: https://david-dm.org/floatdrop/gulp-watch.png?theme=shields.io
