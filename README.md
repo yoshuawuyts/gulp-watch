@@ -11,6 +11,8 @@ One picture is worth a thousand words:
 
 This is usefull, when you want blazingly fast rebuilding per-file.
 
+__Be aware:__ `end` event is never happens in that mode, so plugins dependent on it will never print or do whatever they should do on `end` task.
+
 ```js
 // npm i gulp gulp-watch gulp-sass
 
