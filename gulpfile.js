@@ -7,14 +7,12 @@ var watch = require('./index');
 // require('longjohn');
 
 gulp.task('watch', function (cb) {
-    gulp.src(['test/*.js', 'index.js'], { read: false })
+    gulp.src(['./test/watch.js', 'index.js'], { read: false })
         .pipe(watch(function (events, cb) {
-            gulp.src(['test/*.js'])
+            gulp.src(['./test/watch.js'])
                 .pipe(mocha({ timeout: 5000, reporter: 'spec' }))
                 .on('error', function (err) {
-                    if (!/tests? failed/.test(err.stack)) {
-                        console.log(err.stack);
-                    }
+                    console.log(err.toString());
                     cb();
                 })
                 .on('end', cb);
