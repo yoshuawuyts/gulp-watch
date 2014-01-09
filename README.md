@@ -3,7 +3,7 @@
 
 One picture is worth a thousand words:
 
-![Awesome demonstration](https://github.com/floatdrop/gulp-watch/raw/master/img/demo.gif)
+![Awesome demonstration](https://github.com/floatdrop/gulp-watch/raw/master/img/2014-01-09.gif)
 
 ## Usage
 
