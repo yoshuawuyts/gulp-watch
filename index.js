@@ -89,9 +89,9 @@ module.exports = function (opts, cb) {
     duplex.gaze.on('all', createFile.bind(null, cb || duplex.push.bind(duplex)));
 
     if (opts.glob) {
-        if (opts.passThrough) {
+        if (opts.passThrough !== false) {
             gulp.src(opts.glob, opts)
-                .on('data', cb)
+                .on('data', cb || duplex.push.bind(duplex))
                 .on('error', duplex.emit.bind(duplex, 'error'));
         } else {
             process.nextTick(duplex.end.bind(duplex));
