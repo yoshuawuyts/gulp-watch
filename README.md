@@ -96,6 +96,12 @@ Default: `true`
 
 This options will pass vinyl objects, that was piped into `watch` to next Stream in pipeline.
 
+#### options.glob
+Type: `String`  
+Default: `undefined`
+
+If you want to detect new files, then you have to use this option. When `gulp-watch` gets files from `gulp.src` it looses the information about pattern of matching - therefore it can not detect new files.
+
 #### options.name
 Type: `String`  
 Default: `undefined`
@@ -103,12 +109,6 @@ Default: `undefined`
 Name of the watcher. If it present in options, you will get more readable output:
 
 ![Naming watchers](https://github.com/floatdrop/gulp-watch/raw/master/img/naming.png)
-
-#### options.glob
-Type: `String`  
-Default: `undefined`
-
-Glob, that will be passed to `gaze`.
 
 __Notes__: 
  
