@@ -94,7 +94,7 @@ module.exports = function (opts, cb) {
                 .on('data', cb || duplex.push.bind(duplex))
                 .on('error', duplex.emit.bind(duplex, 'error'));
         } else {
-            process.nextTick(duplex.end.bind(duplex));
+            // process.nextTick(duplex.end.bind(duplex));
         }
     }
 
