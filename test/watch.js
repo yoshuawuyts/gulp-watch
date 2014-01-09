@@ -56,7 +56,7 @@ describe('Constructor', function () {
     });
 
     it('should emit only watched file with options.emit === `one`', function (done) {
-        this.watcher = watch({ glob: allFixtures, emit: 'one' }, function (events) {
+        this.watcher = watch({ glob: allFixtures, emit: 'one', passThrough: false }, function (events) {
             assert.equal(events.length, 1);
             done();
         })
@@ -65,7 +65,7 @@ describe('Constructor', function () {
     });
 
     it('should emit all watched files (and folders) with options.emit === `all`', function (done) {
-        this.watcher = watch({ glob: allFixtures, emit: 'all' }, function (events) {
+        this.watcher = watch({ glob: allFixtures, emit: 'all', passThrough: false }, function (events) {
             assert.equal(events.length, 4);
             done();
         })

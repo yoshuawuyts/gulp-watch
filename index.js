@@ -59,10 +59,6 @@ module.exports = function (opts, cb) {
         process.nextTick(duplex.emit.bind(duplex, 'ready'));
     });
 
-    if (opts.glob) {
-        process.nextTick(duplex.end.bind(duplex));
-    }
-
     function createFile(done, event, filepath) {
 
         var msg = [gutil.colors.magenta(path.basename(filepath)), 'was', event];
@@ -91,6 +87,16 @@ module.exports = function (opts, cb) {
     }
 
     duplex.gaze.on('all', createFile.bind(null, cb || duplex.push.bind(duplex)));
+
+    if (opts.glob) {
+        if (opts.passThrough) {
+            gulp.src(opts.glob, opts)
+                .on('data', cb)
+                .on('error', duplex.emit.bind(duplex, 'error'));
+        } else {
+            process.nextTick(duplex.end.bind(duplex));
+        }
+    }
 
     return duplex;
 };
