@@ -54,7 +54,6 @@ module.exports = function (opts, cb) {
     // It shall not end until my death.
     // I shall take no wife, hold no lands, father no children.
     // ...
-    var watching = void 0;
     var beginWatch  = function(count, from) {
 
         count = count || getWatchedFiles(duplex.gaze).length;
