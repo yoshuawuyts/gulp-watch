@@ -54,6 +54,7 @@ module.exports = function (opts, cb) {
     // It shall not end until my death.
     // I shall take no wife, hold no lands, father no children.
     // ...
+    var watching = false;
     var beginWatch  = function(count, from) {
 
         count = count || getWatchedFiles(duplex.gaze).length;
@@ -64,7 +65,10 @@ module.exports = function (opts, cb) {
             (count === 1 ? 'file' : 'files'),
             (from !== void 0 ? from : '...'));
 
-        process.nextTick(duplex.emit.bind(duplex, 'ready'));
+        if(!watching) {
+            process.nextTick(duplex.emit.bind(duplex, 'ready'));
+            watching = true;
+        }
     }
 
     duplex.on('finish', function () {
