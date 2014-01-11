@@ -7,7 +7,7 @@ One picture is worth a thousand words:
 
 ## Usage
 
-### Continious stream of events
+### Continuous stream of events
 
 This is usefull, when you want blazingly fast rebuilding per-file.
 
