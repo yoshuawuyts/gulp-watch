@@ -26,7 +26,7 @@ var gulp = require('gulp'),
 gulp.task('default', function () {
     gulp.src('scss/**', { read: false })
         .pipe(watch())
-        .pipe(plumber()) // This will pipes working after error event
+        .pipe(plumber()) // This will keeps pipes working after error event
         .pipe(sass())
         .pipe(gulp.dest('./dist/'));
 });
