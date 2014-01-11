@@ -1,7 +1,9 @@
 # [gulp](https://github.com/gulpjs/gulp)-watch [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status](https://coveralls.io/repos/floatdrop/gulp-watch/badge.png)](https://coveralls.io/r/floatdrop/gulp-watch) [![Dependency Status][depstat-image]][depstat-url]
 > Watch, that actually is an endless stream
 
-One picture is worth a thousand words:
+This is implementation of [`gulp.watch`](https://github.com/gulpjs/gulp/blob/master/docs/API.md#gulpwatchglob--opts-cb) with endless stream approach. If `gulp.watch` is working for you - stick with it, otherwise you can try `gulp-watch` plugin.
+
+Main reasons of `gulp-watch` existance is that it can easly (with a little help of [`gulp-plumber`](https://github.com/floatdrop/gulp-plumber) achieve per-file rebuilding on file change:
 
 ![Awesome demonstration](https://github.com/floatdrop/gulp-watch/raw/master/img/2014-01-09.gif)
 
