@@ -33,7 +33,7 @@
     "gulp-grep-stream": "0.0.1"
   },
   "dependencies": {
-    "gulp": "~3.2.4",
+    "gulp": "~3",
     "gulp-batch": "~0.3.3",
     "gaze": "~0.4.3",
     "async": "~0.2.9",
