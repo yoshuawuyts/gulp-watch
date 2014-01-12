@@ -6,6 +6,7 @@ delete require.cache[require.resolve('..')];
 var watch = require('..'),
     gulp = require('gulp'),
     assert = require('assert'),
+    es = require('event-stream'),
     path = require('path'),
     fs = require('fs'),
     Stream = require('stream').Stream;
@@ -45,11 +46,13 @@ describe('Batching', function () {
 
         it('option.buffer `false` should make contents Stream', function (done) {
             this.watcher = watch({ buffer: false }, function (events) {
-                    assert.equal(events.length, 1);
-                    var file = events.pop();
-                    assert.ok(file.contents);
-                    assert.ok(file.contents instanceof Stream);
-                    done();
+                    events.pipe(es.writeArray(function (err, array) {
+                        assert.equal(array.length, 1);
+                        var file = array.pop();
+                        assert.ok(file.contents);
+                        assert.ok(file.contents instanceof Stream);
+                        done();
+                    }));
                 })
                 .on('error', done)
                 .on('ready', touchOneFixture);
@@ -59,10 +62,12 @@ describe('Batching', function () {
 
         it('option.read should remove contents from emitted files', function (done) {
             this.watcher = watch({ read: false }, function (events) {
-                    assert.equal(events.length, 1);
-                    var file = events.pop();
-                    assert.ok(!file.contents);
-                    done();
+                    events.pipe(es.writeArray(function (err, array) {
+                        assert.equal(array.length, 1);
+                        var file = array.pop();
+                        assert.ok(!file.contents);
+                        done();
+                    }));
                 })
                 .on('error', done)
                 .on('ready', touchOneFixture);
@@ -117,8 +122,10 @@ describe('Batching', function () {
 
     it('should call callback with detected event', function (done) {
         this.watcher = watch(function (events) {
-                assert.equal(events.length, 1);
-                done();
+                events.pipe(es.writeArray(function (err, array) {
+                    assert.equal(array.length, 1);
+                    done();
+                }));
             })
             .on('error', done)
             .on('ready', touchOneFixture);
@@ -129,9 +136,11 @@ describe('Batching', function () {
 
     it('should call callback with detected event in async mode', function (done) {
         this.watcher = watch(function (events, cb) {
-                assert.equal(events.length, 1);
-                done();
-                cb();
+                events.pipe(es.writeArray(function (err, array) {
+                    assert.equal(array.length, 1);
+                    done();
+                    cb();
+                }));
             })
             .on('error', done)
             .on('ready', touchOneFixture);

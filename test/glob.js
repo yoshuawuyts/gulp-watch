@@ -9,8 +9,8 @@ var watch = require('..'),
     path = require('path'),
     gulp = require('gulp'),
     fs = require('fs'),
-    gutil = require('gulp-util'),
-    Stream = require('stream').Stream;
+    es = require('event-stream'),
+    gutil = require('gulp-util');
 
 var fixtures = path.join(__dirname, 'fixtures'),
     allFixtures = path.join(fixtures, '**/*'),
@@ -79,8 +79,10 @@ describe('Glob', function () {
 
         it('should emit one watched file with default options.emit', function (done) {
             this.watcher = watch({ glob: allFixtures, emitOnGlob: false }, function (events) {
-                assert.equal(events.length, 1);
-                done();
+                events.pipe(es.writeArray(function (err, array) {
+                    assert.equal(array.length, 1);
+                    done();
+                }));
             })
             .on('error', done)
             .on('ready', touchOneFixture);
@@ -88,8 +90,10 @@ describe('Glob', function () {
 
         it('should emit 4 watched file with default options.emit and emitOnGlob', function (done) {
             this.watcher = watch({ glob: allFixtures }, function (events) {
-                assert.equal(events.length, 4);
-                done();
+                events.pipe(es.writeArray(function (err, array) {
+                    assert.equal(array.length, 4);
+                    done();
+                }));
             })
             .on('error', done)
             .on('ready', touchOneFixture);
@@ -97,8 +101,10 @@ describe('Glob', function () {
 
         it('should emit only watched file with options.emit === `one`', function (done) {
             this.watcher = watch({ glob: allFixtures, emit: 'one', emitOnGlob: false }, function (events) {
-                assert.equal(events.length, 1);
-                done();
+                events.pipe(es.writeArray(function (err, array) {
+                    assert.equal(array.length, 1);
+                    done();
+                }));
             })
             .on('error', done)
             .on('ready', touchOneFixture);
@@ -106,8 +112,10 @@ describe('Glob', function () {
 
         it('should emit all watched files (and folders) with options.emit === `all`', function (done) {
             this.watcher = watch({ glob: allFixtures, emit: 'all', emitOnGlob: false }, function (events) {
-                assert.equal(events.length, 4);
-                done();
+                events.pipe(es.writeArray(function (err, array) {
+                    assert.equal(array.length, 4);
+                    done();
+                }));
             })
             .on('error', done)
             .on('ready', touchOneFixture);
