@@ -112,9 +112,9 @@ module.exports = function (opts, cb) {
                 .on('data', function(){file_glob_count++})
                 .on('data', cb || duplex.push.bind(duplex))
                 .on('error', duplex.emit.bind(duplex, 'error'))
-                .on('end', beginWatch.bind(null, file_glob_count, 'from the glob: ' + opts.glob));
+                .on('end', beginWatch.bind(null, file_glob_count, 'from glob: ' + opts.glob));
         } else {
-            beginWatch(null, 'from the glob: ' + opts.glob);
+            beginWatch(null, 'from glob: ' + opts.glob);
         }
     }
 
