@@ -9,6 +9,23 @@ Main reasons of `gulp-watch` existance is that it can easly (with a little help 
 
 ## Usage
 
+### Batching mode
+
+This is close to bundled `gulp.watch`, but with some tweaks. First - files will be grouped by timeout of `200` and passed into stream inside callback (this will keep `git checkout` commands do rebuilding only once). Second - callbacks will __never__ run parallel (unless you remove `return`), until one stream ends working.
+
+```js
+var gulp = require('gulp'),
+    watch = require('gulp-watch');
+
+gulp.task('default', function () {
+    gulp.src('scss/**/*.scss')
+        .pipe(watch(function(files) {
+            return files.pipe(sass())
+                .pipe(gulp.dest('./dist/'));
+        });
+});
+```
+
 ### Continuous stream of events
 
 This is usefull, when you want blazingly fast rebuilding per-file.
@@ -50,10 +67,12 @@ gulp.task('default', function () {
 ```js
 var grep = require('gulp-grep-stream');
 var mocha = require('gulp-mocha');
+var plumber = require('gulp-plumber');
 
 gulp.task('watch', function() {
     gulp.src(['lib/**', 'test/**'], { read: false })
         .pipe(watch({ emit: 'all' }))
+        .pipe(plumber())
         .pipe(grep('*/test/*.js'))
         .pipe(mocha({ reporter: 'spec' }))
         .on('error', function() {
