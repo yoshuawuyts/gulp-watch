@@ -33,7 +33,9 @@ module.exports = function (opts, cb) {
     var duplex = new Duplex({ objectMode: true, allowHalfOpen: true });
     duplex.gaze = new Gaze(opts.glob);
 
+    var upstream_count = 0;
     duplex._write = function _write(file, encoding, done) {
+        upstream_count++;
         pathMap[file.path] = { cwd: file.cwd, base: file.base };
         duplex.gaze.add(file.path, done.bind(null, null));
         if (opts.passThrough !== false) { duplex.push(file); }
@@ -48,15 +50,29 @@ module.exports = function (opts, cb) {
 
     duplex.gaze.on('error', duplex.emit.bind(duplex, 'error'));
 
-    duplex.on('finish', function () {
-        var count = getWatchedFiles(duplex.gaze).length;
+    // Files gather, and now my watch begins.
+    // It shall not end until my death.
+    // I shall take no wife, hold no lands, father no children.
+    // ...
+    var watching = false;
+    var beginWatch  = function(count, from) {
+
+        count = count || getWatchedFiles(duplex.gaze).length;
 
         gutil.log(
             (opts.name ? gutil.colors.cyan(opts.name) + ' is watching': 'Watching'),
             gutil.colors.cyan(count),
-            (count === 1 ? 'file...' : 'files...'));
+            (count === 1 ? 'file' : 'files'),
+            (from !== void 0 ? from : '...'));
 
-        process.nextTick(duplex.emit.bind(duplex, 'ready'));
+        if(!watching) {
+            process.nextTick(duplex.emit.bind(duplex, 'ready'));
+            watching = true;
+        }
+    }
+
+    duplex.on('finish', function () {
+        beginWatch(upstream_count, 'received from the pipe.');
     });
 
     function createFile(done, event, filepath) {
@@ -89,12 +105,16 @@ module.exports = function (opts, cb) {
     duplex.gaze.on('all', createFile.bind(null, cb || duplex.push.bind(duplex)));
 
     if (opts.glob) {
-        if (opts.passThrough) {
+        if (opts.emitOnGlob === true) {
+
+            var file_glob_count = 0;
             gulp.src(opts.glob, opts)
-                .on('data', cb)
-                .on('error', duplex.emit.bind(duplex, 'error'));
+                .on('data', function(){file_glob_count++})
+                .on('data', cb || duplex.push.bind(duplex))
+                .on('error', duplex.emit.bind(duplex, 'error'))
+                .on('end', beginWatch.bind(null, file_glob_count, 'from glob: ' + opts.glob));
         } else {
-            process.nextTick(duplex.end.bind(duplex));
+            beginWatch(null, 'from glob: ' + opts.glob);
         }
     }
 
