@@ -33,8 +33,21 @@ describe('Glob', function () {
                 .on('ready', done);
         });
 
+        it('should emit `data` when file was piped into watcher', function (done) {
+            this.watcher = watch({ glob: topFixtures }, function () { })
+                .on('data', done.bind(null, null));
+            gulp.src(subFixture)
+                .pipe(this.watcher)
+                .once('data', touch.bind(null, subFixture));
+        });
+
         it('should emit `data`', function (done) {
             this.watcher = watch({ glob: allFixtures }, function () { })
+                .on('data', done.bind(null, null));
+        });
+
+        it('should emit `data` with emitOnGlob === false', function (done) {
+            this.watcher = watch({ glob: allFixtures, emitOnGlob: false }, function () { })
                 .on('data', done.bind(null, null))
                 .on('ready', touchOneFixture);
         });
@@ -62,6 +75,42 @@ describe('Glob', function () {
             this.watcher = watch({ glob: subFixture }, function () { })
                 .on('ready', done)
                 .on('end', done.bind(null, '`end` was emitted'));
+        });
+
+        it('should emit one watched file with default options.emit', function (done) {
+            this.watcher = watch({ glob: allFixtures, emitOnGlob: false }, function (events) {
+                assert.equal(events.length, 1);
+                done();
+            })
+            .on('error', done)
+            .on('ready', touchOneFixture);
+        });
+
+        it('should emit 4 watched file with default options.emit and emitOnGlob', function (done) {
+            this.watcher = watch({ glob: allFixtures }, function (events) {
+                assert.equal(events.length, 4);
+                done();
+            })
+            .on('error', done)
+            .on('ready', touchOneFixture);
+        });
+
+        it('should emit only watched file with options.emit === `one`', function (done) {
+            this.watcher = watch({ glob: allFixtures, emit: 'one', emitOnGlob: false }, function (events) {
+                assert.equal(events.length, 1);
+                done();
+            })
+            .on('error', done)
+            .on('ready', touchOneFixture);
+        });
+
+        it('should emit all watched files (and folders) with options.emit === `all`', function (done) {
+            this.watcher = watch({ glob: allFixtures, emit: 'all', emitOnGlob: false }, function (events) {
+                assert.equal(events.length, 4);
+                done();
+            })
+            .on('error', done)
+            .on('ready', touchOneFixture);
         });
     });
 
@@ -108,7 +157,7 @@ describe('Glob', function () {
 
         it('should preserve File object', function (done) {
             this.watcher =
-                watch({ glob: allFixtures })
+                watch({ glob: allFixtures, emitOnGlob: false })
                 .on('data', function (actual) {
                     try {
                         assert.equal(actual.path, this.expected.path);

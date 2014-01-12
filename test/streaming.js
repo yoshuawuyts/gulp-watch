@@ -9,6 +9,7 @@ var watch = require('..'),
     path = require('path'),
     gulp = require('gulp'),
     fs = require('fs'),
+    gutil = require('gulp-util'),
     Stream = require('stream').Stream;
 
 var fixtures = path.join(__dirname, 'fixtures'),
@@ -32,15 +33,18 @@ describe('Streaming', function () {
                 })
                 .on('error', done);
             this.watcher.write(this.expected);
+            this.watcher.end();
         });
 
         it('option.passThrough should block events with `false`', function (done) {
+            var noop = gutil.noop();
             this.watcher = watch({ passThrough: false })
-                .on('data', done)
-                .on('error', done)
-                .on('end', done.bind(null, null));
-            this.watcher.write(this.expected);
-            this.watcher.close();
+                .on('data', done.bind(null, null))
+                .on('finish', touchOneFixture)
+                .on('error', done);
+            noop.pipe(this.watcher);
+            noop.write(this.expected);
+            noop.end();
         });
 
         it('option.buffer `false` should make contents Stream', function (done) {

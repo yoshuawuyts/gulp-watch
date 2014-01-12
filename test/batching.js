@@ -29,14 +29,14 @@ describe('Batching', function () {
                 .on('data', done.bind(null, null))
                 .on('error', done);
             this.watcher.write(this.expected);
+            this.watcher.end();
         });
 
         it('option.passThrough should block events with `false`', function (done) {
             this.watcher = watch({ passThrough: false },
-                function (events) {
+                function () {
                     done();
                 })
-                .on('data', done)
                 .on('error', done)
                 .on('ready', touchOneFixture);
             this.watcher.write(this.expected);
