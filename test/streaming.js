@@ -69,51 +69,6 @@ describe('Streaming', function () {
         });
 
     });
-    
-    describe('Glob mode', function () {
-        it('should emit `ready`', function (done) {
-            this.watcher = watch({ glob: allFixtures })
-                .on('ready', done);
-        });
-
-        it('should emit `data`', function (done) {
-            this.watcher = watch({ glob: allFixtures })
-                .on('ready', touchOneFixture)
-                .on('data', function (data) { assert.ok(data); done(); })
-                .on('error', done);
-        });
-
-        it('should emit `end` on close', function (done) {
-            watch({ glob: allFixtures })
-                .on('end', done)
-                .close();
-        });
-
-        it('should detect changes on file', function (done) {
-            this.watcher = watch({ glob: allFixtures })
-                .on('data', done.bind(null, null))
-                .on('ready', touchOneFixture);
-        });
-
-        it('should preserve File object', function (done) {
-            this.watcher =
-                watch({ glob: allFixtures })
-                .on('data', function (actual) {
-                    try {
-                        assert.equal(actual.path, this.expected.path);
-                        assert.equal(actual.cwd, this.expected.cwd);
-                        assert.equal(actual.base, this.expected.base);
-                        assert.equal(actual.relative, this.expected.relative);
-                        assert.deepEqual(actual.contents, this.expected.contents);
-                    } catch (e) {
-                        return done(e);
-                    }
-                    done();
-                }.bind(this))
-                .on('error', done)
-                .on('ready', touchOneFixture);
-        });
-    });
 
     describe('Pipe mode', function () {
 

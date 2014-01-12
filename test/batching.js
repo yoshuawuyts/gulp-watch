@@ -146,7 +146,7 @@ describe('Batching', function () {
             .close();
     });
 
-    it('should not emit `finish` when gulp.src ends', function (done) {
+    it('should emit `finish` when gulp.src ends', function (done) {
         this.watcher = watch(function () { })
             .on('finish', done)
             .end();

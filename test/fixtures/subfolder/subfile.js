@@ -1,1 +1,1 @@
-subfolder/subfile.js
+subfile.js
