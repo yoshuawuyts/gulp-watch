@@ -22,7 +22,7 @@ gulp.task('default', function () {
         .pipe(watch(function(files) {
             return files.pipe(sass())
                 .pipe(gulp.dest('./dist/'));
-        });
+        }));
 });
 ```
 
